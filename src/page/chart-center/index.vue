@@ -4,49 +4,104 @@
     <div class="main left">
       <div class="left-header">
         <p>工作表</p>
-        <div><span>{{config.dataConfig.tableName||'请配置数据源'}}</span> <i class="iconfont icon-peizhishujuyuan" @click="showDataSource"></i></div>
+        <div><span>{{config.dataConfig.tableName||'请配置数据源'}}</span> <i
+            class="iconfont icon-peizhishujuyuan"
+            @click="showDataSource"
+          ></i></div>
       </div>
       <div class="left-content">
         <ul>
-          <li v-for="(item,index) in this.config.dataConfig.list" :key="index">
-            <p @dragstart="dragstart($event,item)" draggable="true">
+          <li
+            v-for="(item,index) in this.config.dataConfig.list"
+            :key="index"
+          >
+            <p
+              @dragstart="dragstart($event,item)"
+              draggable="true"
+            >
               <i class="el-icon-tickets"></i>
               <span>{{item.name}}</span>
             </p>
           </li>
         </ul>
       </div>
-      <data-source ref="dataSource" :dataConfig="config.dataConfig"></data-source>
+      <data-source
+        ref="dataSource"
+        :dataConfig="config.dataConfig"
+      ></data-source>
     </div>
     <!-- 中间  图表部分 -->
     <div class="main center">
       <div class="content-center">
         <div class="content header">
           <div class="content-top">
-            <div class="dimension clearfix" @dragenter.prevent @dragover.prevent @drop.prevent="dragend($event,'dimension')">
+            <div
+              class="dimension clearfix"
+              @dragenter.prevent
+              @dragover.prevent
+              @drop.prevent="dragend($event,'dimension')"
+            >
               <span class="dn-title">维度</span>
-              <span class="dn-title-edit iconfont icon-bianji1" style="font-size:14px"></span>
-              <div class="left dn-item-grou" style="mardin-left: 60px;">
-                <p class="dn-item left" v-for="item in config.dataConfig.dimension">
+              <span
+                class="dn-title-edit iconfont icon-bianji1"
+                style="font-size:14px"
+              ></span>
+              <div
+                class="left dn-item-grou"
+                style="mardin-left: 60px;"
+              >
+                <p
+                  class="dn-item left"
+                  v-for="(item,index) in config.dataConfig.dimension"
+                  :key="index"
+                  @dragstart="dragstart($event,item,'dimension')"
+                  draggable="true"
+                >
                   <span>{{item.name}}</span>
-                  <span class="dn-item-close el-icon-circle-close" @click="dimensionItemClose(item)"></span>
+                  <span
+                    class="dn-item-close el-icon-circle-close"
+                    @click="dimensionItemClose(item)"
+                  ></span>
                 </p>
               </div>
             </div>
-            <div class="numberValue clearfix" @dragenter.prevent @dragover.prevent @drop.prevent="dragend($event,'numberValue')">
+            <div
+              class="numberValue clearfix"
+              @dragenter.prevent
+              @dragover.prevent
+              @drop.prevent="dragend($event,'numberValue')"
+            >
               <span class="dn-title">数值</span>
-              <span class="dn-title-edit iconfont icon-bianji1" style="font-size:14px"></span>
-              <div class="left dn-item-grou" style="mardin-left: 60px;">
-                <p class="dn-item left" v-for="item in config.dataConfig.numberValue">
+              <span
+                class="dn-title-edit iconfont icon-bianji1"
+                style="font-size:14px"
+              ></span>
+              <div
+                class="left dn-item-grou"
+                style="mardin-left: 60px;"
+              >
+                <p
+                  class="dn-item left"
+                  v-for="(item,index) in config.dataConfig.numberValue"
+                  :key="index"
+                  @dragstart="dragstart($event,item,'numberValue')"
+                  draggable="true"
+                >
                   <span>{{item.name}}</span>
-                  <span class="dn-item-close el-icon-circle-close" @click="numberValueItemClose(item)"></span>
+                  <span
+                    class="dn-item-close el-icon-circle-close"
+                    @click="numberValueItemClose(item)"
+                  ></span>
                 </p>
               </div>
             </div>
           </div>
         </div>
         <div class="content chart">
-          <chart id="my" :config="config"></chart>
+          <chart
+            id="my"
+            :config="config"
+          ></chart>
         </div>
         <div class="content footer"></div>
       </div>
@@ -65,7 +120,12 @@
     <!-- 右边  配置部分 -->
     <div class="main right">
       <!-- 标题与数据更新方式 -->
-      <configs :chartArr="chartArr" :config="config" ref="config" v-show="config.type!='model'"></configs>
+      <configs
+        :chartArr="chartArr"
+        :config="config"
+        ref="config"
+        v-show="config.type!='model'"
+      ></configs>
     </div>
   </div>
 </template>
@@ -169,7 +229,8 @@ export default {
           numberValue: [{ name: "1111" }]
         }
       },
-      node: null
+      node: null,
+      type: ""
     };
   },
   components: {
@@ -200,8 +261,9 @@ export default {
     /*
      *开始拖拽
      */
-    dragstart(e, item) {
+    dragstart(e, item, type = "") {
       this.node = JSON.parse(JSON.stringify(item));
+      this.type = type;
     },
     /*
      *结束拖拽
@@ -212,6 +274,12 @@ export default {
       );
       if (flag == -1) {
         this.config.dataConfig[type].push(this.node);
+        if (this.type) {
+          let i = this.config.dataConfig[this.type].findIndex(
+            v => v.name == this.node.name
+          );
+          this.config.dataConfig[this.type].splice(i, 1);
+        }
         this.setChartData();
       }
     },
