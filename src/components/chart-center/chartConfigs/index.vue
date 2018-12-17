@@ -33,11 +33,9 @@
       </el-collapse>
     </div>
      <!-- 图表配置内容 -->
-      <div class="config bottom">
-        <el-button type="text">事件配置</el-button>
-        <el-button type="text">监听参数</el-button>
-        <el-button type="text">更新配置</el-button>
-      </div>
+      <!-- <div class="config bottom">
+   
+      </div> -->
   </div>
 
 </template>

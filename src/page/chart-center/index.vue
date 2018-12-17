@@ -103,7 +103,11 @@
             :config="config"
           ></chart>
         </div>
-        <div class="content footer"></div>
+        <div class="content footer">
+          <el-button type="text">事件配置</el-button>
+          <el-button type="text">监听参数</el-button>
+          <el-button type="text">更新配置</el-button>
+        </div>
       </div>
       <!-- 图表侧边栏 -->
       <!-- <div class="main aside">
@@ -225,8 +229,8 @@ export default {
             }
           ],
           /* 中间头部配置部分 */
-          dimension: [{ name: "1111" }],
-          numberValue: [{ name: "1111" }]
+          dimension: [],
+          numberValue: []
         }
       },
       node: null,
@@ -314,7 +318,6 @@ export default {
 @import url("../../assets/less/chartCenter.less");
 @import url("../../assets/icon/iconfont/iconfont.css");
 @import url("../../assets/icon/icon1/iconfont.css");
-
 #div2,
 .div1 ui li {
   width: 198px;
