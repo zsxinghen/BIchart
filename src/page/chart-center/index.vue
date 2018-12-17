@@ -193,6 +193,9 @@ export default {
      */
     setChartData() {
       this.$set(this.config, "data", null);
+      setTimeout(() => {
+        this.$set(this.config, "data", null);
+      }, 100);
     },
     /*
      *开始拖拽
