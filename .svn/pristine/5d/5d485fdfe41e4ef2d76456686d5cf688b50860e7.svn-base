@@ -1,0 +1,65 @@
+<template>
+  <div class="app">
+    <!-- 头部 -->
+    <board-hearder></board-hearder>
+    <!-- 路由 -->
+    <div class="router-view">
+       <router-view/>
+    </div>
+    <!-- loading -->
+    <loading></loading>
+  </div>
+</template>
+
+<script>
+import { mapMutations } from "vuex";
+import boardHearder from "./common/board-hearder";
+export default {
+  props: ["boardApi", "accountName", "accountEnglist", "appLogo"],
+  data() {
+    return {};
+  },
+  created() {
+    window.localStorage.setItem("boardApi", this.boardApi);
+    this.setAccountInfo({
+      accountName: this.accountName,
+      accountEnglist: this.accountEnglist,
+      appLogo: this.appLogo
+    });
+  },
+  methods: {
+    ...mapMutations(["setAccountInfo"])
+  },
+  components: {
+    boardHearder
+  }
+};
+</script>
+
+<style lang="less">
+@import "./assets/less/reset.less";
+@import url("./assets/font/iconfont.css");
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  .board-hearder {
+    flex: 0 0 80px !important;
+    // position: sticky;
+    // top: 0;
+  }
+  .router-view {
+    flex: 1;
+    margin-bottom: 10px;
+    //  position: absolute;
+    //  top: 80px;
+    //  bottom: 10px;
+    //  left: 0;
+    //  width: 100%;
+
+    & > div {
+      height: 100%;
+    }
+  }
+}
+</style>

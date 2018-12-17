@@ -1,0 +1,157 @@
+/*
+*看板中心右边看板部分
+*/
+<template>
+  <div class="board-center">
+    <!-- 侧边栏 -->
+    <sider-bar title="看板库" :urls="url">
+      <el-dropdown>
+        <span class="el-dropdown-link">
+          <i class="iconfont icon-gengduo"></i>
+        </span>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item>看板授权</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </sider-bar>
+    <!-- 布局展示 -->
+    <div class="board-display">
+      <div class="board-display-body">
+        <div class="board-display-header">
+          <el-dropdown>
+            <span class="el-dropdown-link">
+              <i class="iconfont icon-shezhi"></i>
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item>标题设置</el-dropdown-item>
+              <el-dropdown-item>布局设置</el-dropdown-item>
+              <el-dropdown-item>背景设置</el-dropdown-item>
+              <el-dropdown-item>共享参数</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <super-layout :config="configData" ref="superLayout" :isToolbar="false"></super-layout>
+      </div>
+    </div>
+    <!-- 背景设置 -->
+    <board-config-background></board-config-background>
+    <!-- 标题设置 -->
+    <board-config-title :boardConfig="{}"></board-config-title>
+    <!-- 共享参数 -->
+    <board-config-param></board-config-param>
+    <!-- 布局设置 -->
+    <board-config-layout></board-config-layout>
+  </div>
+</template>
+<script>
+import siderBar from "../../common/sider-bar";
+import superLayout from "../../common/superLayout";
+import boardConfigTitle from "../../components/board-center/board-config-title";
+import boardConfigBackground from "../../components/board-center/board-config-background";
+import boardConfigLayout from "../../components/board-center/board-config-layout";
+import boardConfigParam from "../../components/board-center/board-config-param";
+import { default as urls } from "../../api/urls/board-center.js";
+export default {
+  data() {
+    return {
+      configData: {
+        layout: [
+          {
+            x: 0,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "0"
+          },
+          {
+            x: 20,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "1"
+          },
+          {
+            x: 40,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "2"
+          },
+          {
+            x: 60,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "3"
+          },
+          {
+            x: 80,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "4"
+          },
+          {
+            x: 0,
+            y: 0,
+            w: 20,
+            h: 1,
+            i: "5"
+          }
+        ],
+        rowHeight: 200,
+        isDraggable: true,
+        isResizable: true,
+        line: 1
+      },
+      url: null
+    };
+  },
+  created() {
+    this.url = urls;
+  },
+  methods: {},
+  components: {
+    siderBar,
+    superLayout,
+    boardConfigTitle,
+    boardConfigBackground,
+    boardConfigLayout,
+    boardConfigParam
+  }
+};
+</script>
+<style lang="less">
+.board-center {
+  display: flex;
+  justify-content: space-between;
+  .board-display {
+    flex: 1;
+    padding: 10px 10px 0 0;
+    height: 100%;
+    box-sizing: border-box;
+
+    .board-display-body {
+      width: 100%;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px 0px rgba(24, 27, 45, 0.14);
+      height: 100%;
+      box-sizing: border-box;
+      overflow: auto;
+
+      .board-display-header {
+        width: 100%;
+        box-sizing: border-box;
+      }
+      .layout-display-body::-webkit-scrollbar {
+        display: none;
+      }
+    }
+    .boar-display-body::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+</style>

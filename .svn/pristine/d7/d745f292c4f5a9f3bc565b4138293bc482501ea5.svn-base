@@ -1,0 +1,154 @@
+/*
+*看板中心--标题配置
+*/
+<template>
+  <board-toast :config="dialogConfig" @cancel="close" @save="save" v-if="dialogConfig.dialogVisible">
+    <el-form :model="boardConfig" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+      <h1>主标题</h1>
+      <el-form-item label="标题">
+        <el-col :span="20">
+          <el-input v-model.trim="boardConfig.title.text" size="mini"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字号">
+        <el-col :span="20">
+          <el-input-number v-model="boardConfig.title.fontsize" size="mini" controls-position="right" :controls="false"
+            @change="handleChange" :min="1" :max="10"></el-input-number>px
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字体">
+        <el-col :span="20">
+          <el-select v-model="boardConfig.title.fontFamily" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字体颜色">
+        <el-col :span="20">
+          <el-color-picker v-model="boardConfig.title.color" show-alpha></el-color-picker>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="位置">
+        <el-col :span="20">
+          <el-radio-group v-model="boardConfig.title.position">
+            <el-radio label="left">左对齐</el-radio>
+            <el-radio label="center">居中</el-radio>
+            <el-radio label="right">右对齐</el-radio>
+          </el-radio-group>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="是否显示">
+        <el-col :span="20">
+          <el-checkbox v-model="boardConfig.title.isShow">显示</el-checkbox>
+        </el-col>
+      </el-form-item>
+      <h1>副标题</h1>
+      <el-form-item label="标题">
+        <el-col :span="20">
+          <el-input v-model.trim="boardConfig.subTitle.text" size="mini"></el-input>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字号">
+        <el-col :span="20">
+          <el-input-number v-model="boardConfig.subTitle.fontsize" size="mini" controls-position="right" :controls="false"
+            @change="handleChange" :min="1" :max="10"></el-input-number>px
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字体">
+        <el-col :span="20">
+          <el-select v-model="boardConfig.subTitle.fontFamily" placeholder="请选择">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+            </el-option>
+          </el-select>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="字体颜色">
+        <el-col :span="20">
+          <el-color-picker v-model="boardConfig.subTitle.color" show-alpha></el-color-picker>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="位置">
+        <el-col :span="20">
+          <el-radio-group v-model="boardConfig.subTitle.position">
+            <el-radio label="left">左对齐</el-radio>
+            <el-radio label="center">居中</el-radio>
+            <el-radio label="right">右对齐</el-radio>
+          </el-radio-group>
+        </el-col>
+      </el-form-item>
+      <el-form-item label="是否显示">
+        <el-col :span="20">
+          <el-checkbox v-model="boardConfig.subTitle.isShow">显示</el-checkbox>
+        </el-col>
+      </el-form-item>
+    </el-form>
+  </board-toast>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      dialogConfig: {
+        title: "标题设置", //弹窗标题
+        dialogVisible: false, //弹窗显示
+        width: "400px", //弹窗宽
+        btnData: ["cancel", "save"]
+      }
+    };
+  },
+  props: {
+    boardConfig: {
+      type: Object,
+      default: () => true
+    }
+  },
+  mounted() {
+      
+  },
+  methods: {
+    show(baseData, url, id) {
+      this.url = url;
+      this.baseData = baseData;
+      this.dialogConfig.dialogVisible = true;
+      this.parentId = id;
+    },
+    close() {
+      this.dialogConfig.dialogVisible = false;
+    },
+    save() {
+      this.$refs["ruleForm"].validate(valid => {
+        if (valid) {
+          let param = {
+            alias: this.ruleForm.name,
+            folderId: this.parentId
+          };
+          this.$apis
+            .fetchPost(this.url, {
+              params: param,
+              Vue: this
+            })
+            .then(res => {
+              if (res.result) {
+                this.$parent.filterData();
+                this.close();
+                this.$message({
+                  type: "success",
+                  message: res.message
+                });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.message
+                });
+              }
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    }
+  }
+};
+</script>
