@@ -5,7 +5,9 @@
     <chart-hearder v-if="currRoute==='chartCenter'"></chart-hearder>
     <!-- 路由 -->
     <div class="router-view">
+      <keep-alive>
        <router-view/>
+      </keep-alive>
     </div>
     <!-- loading -->
     <loading></loading>
