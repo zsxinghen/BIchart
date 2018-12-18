@@ -100,7 +100,7 @@
         </div>
         <div class="content chart">
           <chart
-            :id="getCurrchartId"
+            id="my"
             :config="config"
           ></chart>
         </div>
@@ -108,6 +108,7 @@
           <el-button type="text">事件配置</el-button>
           <el-button type="text">监听参数</el-button>
           <el-button type="text">更新配置</el-button>
+          {{config.data}}
         </div>
       </div>
       <!-- 图表侧边栏 -->
@@ -162,13 +163,13 @@ export default {
           /* 左边列表部分 */
           list: [
             {
-              name: "1111111111111"
+              name: "id"
             },
             {
-              name: "111112222222222"
+              name: "name"
             },
             {
-              name: "333"
+              name: "category"
             },
             {
               name: "444"
@@ -216,7 +217,51 @@ export default {
     setChartData() {
       this.$set(this.config, "data", null);
       setTimeout(() => {
-        // this.$set(this.config, "data", null);
+        let json = [
+          {
+            id: "12987122",
+            name: "好滋好味鸡蛋仔",
+            category: "江浙小吃、小吃零食",
+            desc: "荷兰优质淡奶，奶香浓而不腻",
+            address: "上海市普陀区真北路",
+            shop: "王小虎夫妻店",
+            shopId: "10333"
+          },
+          {
+            id: "12987123",
+            name: "好滋好味鸡蛋仔",
+            category: "江浙小吃、小吃零食",
+            desc: "荷兰优质淡奶，奶香浓而不腻",
+            address: "上海市普陀区真北路",
+            shop: "王小虎夫妻店",
+            shopId: "10333"
+          },
+          {
+            id: "12987125",
+            name: "好滋好味鸡蛋仔",
+            category: "江浙小吃、小吃零食",
+            desc: "荷兰优质淡奶，奶香浓而不腻",
+            address: "上海市普陀区真北路",
+            shop: "王小虎夫妻店",
+            shopId: "10333"
+          },
+          {
+            id: "12987126",
+            name: "好滋好味鸡蛋仔",
+            category: "江浙小吃、小吃零食",
+            desc: "荷兰优质淡奶，奶香浓而不腻",
+            address: "上海市普陀区真北路",
+            shop: "王小虎夫妻店",
+            shopId: "10333"
+          }
+        ];
+        let data = this.$setData.listData(
+          this.config.chart,
+          json,
+          this.config.dataConfig.dimension,
+          this.config.dataConfig.numberValue
+        );
+        this.$set(this.config, "data", data);
       }, 100);
       this.resetChartType();
     },

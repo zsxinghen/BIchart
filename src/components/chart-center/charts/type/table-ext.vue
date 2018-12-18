@@ -3,7 +3,7 @@
       <thead>
         <tr>
           <th :style="`border:1px solid ${config.td.borderColor};font-size:${config.th.fontSize}px;font-family:${config.th.fontFamliy};
-      color:${config.th.color};background:${config.thColor}`" v-for="item in columns" :key="item.prop">{{item.label}}</th>
+      color:${config.th.color};background:${config.thColor}`" v-for="(item,i) in columns" :key="i">{{item.label}}</th>
         </tr>
       </thead>
       <tbody >

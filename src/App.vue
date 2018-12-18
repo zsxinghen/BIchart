@@ -32,7 +32,7 @@ export default {
     });
   },
   beforeMount() {
-    this.$router.push("/");
+    this.$router.push("/chartCenter");
     this.currRoute = this.$route.name;
   },
   methods: {

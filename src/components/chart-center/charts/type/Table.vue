@@ -50,6 +50,7 @@ export default {
     // 更改样式
     setStyle() {
       let dom = document.getElementById(`${this.id}`);
+      console.log(`${this.id}`)
       let parDom = dom.parentElement;
       parDom.style.background = this.config.settings.backgroundColor;
     }

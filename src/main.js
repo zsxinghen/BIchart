@@ -11,11 +11,13 @@ import i18n from './lang' // Internationalization
 import Toast from './common/Toast'
 import loading from './common/loading'
 import { default as api } from "./api/public.js";
+import {  default as setData } from "../static/util.js";
 import './toolClass/directive.js';
 
 // import axios from 'axios'
 Vue.config.productionTip = false;
 Vue.prototype.$apis = api;
+Vue.prototype.$setData = setData;
 Vue.use(ElementUI);
 Vue.component('boardToast', Toast)
 Vue.component('loading', loading);
