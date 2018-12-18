@@ -5,7 +5,7 @@
   <div class="board-center">
     <!-- {{configData}} -->
     <!-- 侧边栏 -->
-    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :configData="configData" keyCode="layoutConfig" @currentChange="currentChange">
+    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig" @currentChange="currentChange">
       <el-dropdown>
         <span class="el-dropdown-link">
           <i class="iconfont icon-gengduo"></i>
@@ -93,6 +93,12 @@ export default {
         title: {},
         subTitle: {}
       },
+      currentNode: {
+        config: [],
+        id: undefined,
+        folderId: undefined,
+        alias: undefined
+      },
       url: null
     };
   },
@@ -100,7 +106,7 @@ export default {
     this.url = urls;
   },
   methods: {
-    ...mapMutations(["setCurrConfigs"]),
+    ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
     setBg() {
       if (this.configData.bgConfig.type == "null") {
         return "#fff";
@@ -206,6 +212,8 @@ export default {
      */
     handleEdit(data, index) {
       this.setCurrConfigs(data);
+      this.setCurrNode(this.currentNode);
+      this.setCurrchartId(data.i);
       this.$router.push("/chartCenter");
     }
   },

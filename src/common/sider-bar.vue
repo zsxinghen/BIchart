@@ -156,6 +156,7 @@ export default {
      *获取该文件夹详情
      */
     getDesign(data) {
+        console.log(data,'------')
         this.$apis.fetchPost(this.urls.sideBar.search_layout, {
           params: {
             id: data.id
@@ -164,7 +165,7 @@ export default {
         }).then(res => {
           if (res.result) {
             console.log(res.model)
-            if(data.reportType=='自定义'){
+            
               if (this.title == "布局库") {
                 this.$set(data, 'config', res.model.config);
                 if (res.model.config) {
@@ -176,58 +177,60 @@ export default {
                   this.configData.layout = [];
                 }
               }else{
-                this.$set(data, 'layoutConfig', res.model.layoutConfig);
-                this.$set(data,'layoutId',res.model.layoutId)
-                this.configData.layout =JSON.parse(res.model.layoutConfig).layout;
-                if(res.model.config){
-                  this.$set(data, 'config', res.model.config);
-                  if(JSON.parse(res.model.config).bgConfig){
-                    this.configData.bgConfig=JSON.parse(res.model.config).bgConfig
+                if(data.reportType=='自定义'){
+                  this.$set(data, 'layoutConfig', res.model.layoutConfig);
+                  this.$set(data,'layoutId',res.model.layoutId)
+                  this.configData.layout =JSON.parse(res.model.layoutConfig).layout;
+                  if(res.model.config){
+                    this.$set(data, 'config', res.model.config);
+                    if(JSON.parse(res.model.config).bgConfig){
+                      this.configData.bgConfig=JSON.parse(res.model.config).bgConfig
+                    }else{
+                      this.configData.bgConfig={
+                        type:'null',
+                        opacticy:1
+                      }
+                    }
+                    if(JSON.parse(res.model.config).titleConfig){
+                      this.configData.titleConfig=JSON.parse(res.model.config).titleConfig
+                    }else{
+                      this.configData.titleConfig={
+                        title:{},
+                        subTitle:{}
+                      }
+                    }
                   }else{
+                    this.$set(data, 'config', JSON.stringify(
+                        {
+                          bgConfig:
+                        {
+                          type:'null',
+                          opacticy:1
+                        },
+                        titleConfig:
+                        {
+                          title:{},
+                          subTitle:{}
+                        }
+                      }));
                     this.configData.bgConfig={
                       type:'null',
                       opacticy:1
                     }
-                  }
-                  if(JSON.parse(res.model.config).titleConfig){
-                    this.configData.titleConfig=JSON.parse(res.model.config).titleConfig
-                  }else{
                     this.configData.titleConfig={
                       title:{},
                       subTitle:{}
                     }
                   }
                 }else{
-                  this.$set(data, 'config', JSON.stringify(
-                      {
-                        bgConfig:
-                      {
-                        type:'null',
-                        opacticy:1
-                      },
-                      titleConfig:
-                      {
-                        title:{},
-                        subTitle:{}
-                      }
-                    }));
-                  this.configData.bgConfig={
-                    type:'null',
-                    opacticy:1
-                  }
-                  this.configData.titleConfig={
-                    title:{},
-                    subTitle:{}
-                  }
+                  this.$set(data,'unzipPath',res.model.unzipPath)
                 }
               }
               // 设置节点
               this.$set(this.currentNode, "alias", res.model.alias);
               this.$set(this.currentNode, "id", res.model.id);
               this.$set(this.currentNode, "folderId", res.model.folderId);
-            }else{
-              this.$set(data,'unzipPath',res.model.unzipPath)
-            }
+            
           }
         });
       
@@ -414,6 +417,7 @@ export default {
             })
             .then(res => {
               if (res.result) {
+                this.configData.layout=[]
                 this.$message({
                   type: "success",
                   message: res.message

@@ -11,7 +11,14 @@ export default {
   getCurrRouter: (state) => { //获取当前路由
     return state.currRouter
   },
-  getCurrConfigs: (state) => { //获取当前路由
+  getCurrConfigs: (state) => { //获取图表配置信息
     return state.configs
   },
+  getCurrNode: (state) => { //获取图表所属的看板节点
+    return state.currNode
+  },
+  getCurrchartId: (state) => { //获取图表容器id
+    return state.id
+  },
+
 }

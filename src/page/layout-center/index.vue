@@ -43,7 +43,10 @@ export default {
         line: 1
       },
       currentNode: {
-        config: []
+        config: [],
+        id: undefined,
+        folderId: undefined,
+        alias: undefined
       }
     };
   },
@@ -54,51 +57,55 @@ export default {
     addline(data) {
       this.$refs.superLayout.addLine(data);
     },
-    setCurrentLine(){
-      var max=-1;
-      for(let d of this.configData.layout){
-        if(d.y>max){
-          max=d.y;
+    setCurrentLine() {
+      var max = -1;
+      for (let d of this.configData.layout) {
+        if (d.y > max) {
+          max = d.y;
         }
       }
-      this.configData.line=max+1
+      this.configData.line = max + 1;
     },
-    layoutChange(){
+    layoutChange() {
       this.setCurrentLine();
-      this.save()
+      this.save();
     },
-    handleDel(data,index){
+    handleDel(data, index) {
       this.configData.layout.splice(index, 1);
       this.setCurrentLine();
-      this.save()
+      this.save();
     },
     save() {
       let obj = {
         line: this.configData.line,
         layout: this.configData.layout
       };
+
       let param = {
         id: this.currentNode.id,
         folderId: this.currentNode.folderId,
         alias: this.currentNode.alias,
         config: JSON.stringify(obj)
       };
-      this.$apis.fetchPost(this.url.sideBar.edit_layout, {
-        params: param,
-        Vue: this
-      }).then(res => {
-        if (res.result) {
-          this.$message({
-            type: "success",
-            message: res.message
-          });
-        } else {
-          this.$message({
-            type: "warning",
-            message: res.message
-          });
-        }
-      });
+      console.log(param);
+      this.$apis
+        .fetchPost(this.url.sideBar.edit_layout, {
+          params: param,
+          Vue: this
+        })
+        .then(res => {
+          if (res.result) {
+            this.$message({
+              type: "success",
+              message: res.message
+            });
+          } else {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        });
     }
   },
   components: {

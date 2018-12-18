@@ -2,7 +2,7 @@
  *报表中心
  */
 export default {
-    addTemplateUrl:'/app_bi/template/addTemplate',
-    delUrl:'/app_bi/template/del',
-    pageUrl:'/app_bi/template/getPage'
+    addUrl:'/app_bi/loc/val/add', //新增本地数据源
+    updUrl:'/app_bi/loc/val/upd', //编辑本地数据源
+    delUrl:'/app_bi/loc/val/del'//删除本地数据源
 }

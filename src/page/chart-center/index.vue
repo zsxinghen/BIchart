@@ -100,7 +100,7 @@
         </div>
         <div class="content chart">
           <chart
-            id="my"
+            :id="getCurrchartId"
             :config="config"
           ></chart>
         </div>
@@ -158,7 +158,7 @@ export default {
           /* 弹窗数据部分 */
           sourceType: "local",
           tableName: "",
-          content: null,
+          domain: null,
           /* 左边列表部分 */
           list: [
             {
@@ -192,12 +192,12 @@ export default {
     dataSource
   },
   computed: {
-    ...mapGetters(["getCurrConfigs"])
+    ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   created() {
     if (this.getCurrConfigs) {
       //已配置则赋值
-      this.config = this.getCurrConfigs;
+      // this.config = this.getCurrConfigs;
     } else {
       //未配置则初始化
     }

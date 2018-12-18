@@ -14,5 +14,11 @@ export default {
   setCurrConfigs:(state,data)=>{//设置当前图表的配置信息
     state.configs = data;
   },
+  setCurrNode:(state,data)=>{//设置当前图表的配置信息
+    state.currNode = data;
+  },
+  setCurrchartId:(state,data)=>{//设置当前图表的配置信息
+    state.id = data;
+  },
 }
 

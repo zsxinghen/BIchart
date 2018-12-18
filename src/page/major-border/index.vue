@@ -58,7 +58,7 @@
     </div>
 </template>
 <script>
-import { default as urls } from "../../api/urls/chart-center.js";
+import { default as urls } from "../../api/urls/major-border.js";
 export default {
     data(){
         return{
