@@ -1,6 +1,6 @@
 <template>
 	<div  :id='id' class="my-bi-chart">
-    <div v-show="config.settings.title.isShow&&config.settings.title.text" :style="`height:100%;background:${config.settings.backgroundColor};padding:10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};
+    <div v-show="config.settings.title.isShow&&config.settings.title.text" :style="`background:${config.settings.backgroundColor};padding:10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};
       color:${config.settings.title.color}`">{{config.settings.title.text}}</div>
 		<my-table :columns="config.data.columns" :config="config.settings" :rowspanConfig="rowspanConfig" :colspanConfig="config.data.colspanConfig" :tableData="config.data.tableData" >
 		</my-table>

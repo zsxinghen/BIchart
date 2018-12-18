@@ -58,11 +58,16 @@ export default {
     dataConfig: {
       type: Object,
       default: () => null
+    },
+    config: {
+      type: Object,
+      default: () => null
     }
   },
   mounted() {},
   methods: {
     show() {
+      // 初始化数据
       this.ruleForm = JSON.parse(JSON.stringify(this.dataConfig));
       this.dialogConfig.dialogVisible = true;
     },
@@ -70,7 +75,10 @@ export default {
       this.dialogConfig.dialogVisible = false;
     },
     save() {
+      let str = this.ruleForm.content;
+      console.log(this.ruleForm, JSON.parse(this.ruleForm.content));
       this.dialogConfig.dialogVisible = false;
+      // 保存数据
     }
   }
 };

@@ -10,6 +10,9 @@ export default {
   },
   setCurrRouter:(state,data)=>{//设置当前路由
     state.currRouter = data;
-  } 
+  },
+  setCurrConfigs:(state,data)=>{//设置当前图表的配置信息
+    state.configs = data;
+  },
 }
 

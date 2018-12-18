@@ -28,6 +28,7 @@
       <data-source
         ref="dataSource"
         :dataConfig="config.dataConfig"
+        :config="config"
       ></data-source>
     </div>
     <!-- 中间  图表部分 -->
@@ -125,7 +126,6 @@
     <div class="main right">
       <!-- 标题与数据更新方式 -->
       <configs
-        :chartArr="chartArr"
         :config="config"
         ref="config"
         v-show="config.type!='model'"
@@ -136,14 +136,14 @@
 <script>
 import chart from "../../components/chart-center/charts/index.vue";
 import configs from "../../components/chart-center/chartConfigs/index.vue";
-import { types } from "../../../static/chartType.js";
 import dataSource from "../../components/chart-center/dataConfigs/dialog.vue";
+import { types } from "../../../static/chartType.js";
+import { mapGetters } from "vuex";
 export default {
   name: "chartConfigPage",
   data() {
     return {
       chartTypes: [],
-      chartArr: [],
       chartType: "table",
       config: {
         data: null,
@@ -166,6 +166,15 @@ export default {
             },
             {
               name: "111112222222222"
+            },
+            {
+              name: "333"
+            },
+            {
+              name: "444"
+            },
+            {
+              name: "555"
             }
           ],
           /* 中间头部配置部分 */
@@ -182,8 +191,16 @@ export default {
     configs,
     dataSource
   },
+  computed: {
+    ...mapGetters(["getCurrConfigs"])
+  },
   created() {
-    this.chartArr = types;
+    if (this.getCurrConfigs) {
+      //已配置则赋值
+      this.config = this.getCurrConfigs;
+    } else {
+      //未配置则初始化
+    }
   },
   mounted() {},
   methods: {
@@ -199,8 +216,23 @@ export default {
     setChartData() {
       this.$set(this.config, "data", null);
       setTimeout(() => {
-        this.$set(this.config, "data", null);
+        // this.$set(this.config, "data", null);
       }, 100);
+      this.resetChartType();
+    },
+    resetChartType() {
+      // 当数据不符合条件，图表重新选择为表格
+      let arr = types(
+        this.config.dataConfig.dimension,
+        this.config.dataConfig.numberValue
+      );
+      let flag = arr.findIndex(val => this.config.chart == val.chart);
+      if (flag != -1) {
+        if (!arr[flag].isAble) {
+          this.$refs.config.setType(arr[0]);
+          this.$refs.config.chartType = "table";
+        }
+      }
     },
     /*
      *开始拖拽

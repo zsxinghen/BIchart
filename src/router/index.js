@@ -5,6 +5,7 @@ import layoutCenter from '../page/layout-center/index'
 import boardCenter from '../page/board-center/index'
 import chartCenter from '../page/chart-center/index'
 import majorBorder from '../page/major-border/index'
+import index from '../page/index'
 Vue.use(Router)
 
 export default new Router({
@@ -27,6 +28,11 @@ export default new Router({
       path: '/majorBorder',
       name: 'majorBorder',
       component: majorBorder
+    },
+    {
+      path: '/index',
+      name: 'index',
+      component: index
     }
   ]
 })

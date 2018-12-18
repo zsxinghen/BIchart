@@ -11,7 +11,8 @@ export default new Vuex.Store({
         isloading:false,//等待loding
         isProgress:{show:false,text:'0%'},//加载进度
         accountInfo:{},//公司信息
-        currRouter:1//当前路由
+        currRouter:1,//当前路由
+        configs:null,//当前图表所有配置信息
     },
     actions,
     mutations,

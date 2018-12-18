@@ -1,6 +1,4 @@
 <template>
-  <div>
-	  
     <table class="gridtable"  :style="`border:1px solid ${config.td.borderColor}`">
       <thead>
         <tr>
@@ -18,7 +16,6 @@
         </tr>
       </tbody>
     </table>
-  </div>
 </template>
 <script>
 export default {

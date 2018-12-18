@@ -4,17 +4,21 @@
       <div class="config-title">图表标题</div>
       <el-input v-model="config.settings.title.text" :disabled="config.type=='card'" placeholder="未命名图表名称"></el-input>
     </div>
-     <div class="config box">
+    <div class="config box">
       <div class="config-title">图表备注</div>
       <el-input v-model="config.settings.remark" placeholder="请输入图表备注"></el-input>
     </div>
-    <div class="config chart" v-if="chartArr.length">
+    <div class="config chart">
       <div class="config-title">图表类型</div>
       <ul class="clearfix">
-        <li v-for="item in chartArr" :key="item.chart" :class="[{'active':chartType===item.chart}, {'disabled':chartType===item.chart}]"
-          @click="setType(item)">
+        <li v-for="item in imgType(config.dataConfig.dimension,config.dataConfig.numberValue)" :key="item.chart" :class="[
+        {'active':chartType===item.chart},
+        {'':chartType!==item.chart}]"
+      >
           <el-tooltip class="item" effect="dark" :content="item.name" placement="top-start">
-            <i :class="'iconfont '+item.icon"></i>
+                <!-- <div>{{item.content1}}</div><div>{{item.content2}}</div> -->
+            <i :class="'iconfont '+item.icon"  v-if="item.isAble" @click.stop="setType(item,$event)"></i>
+            <i :class="'iconfont '+item.icon" v-if="!item.isAble" class="disabled"></i>
           </el-tooltip>
         </li>
       </ul>
@@ -28,12 +32,12 @@
           <style-config :config="config.settings"></style-config>
         </el-collapse-item>
         <el-collapse-item title="组件配置" name="3">
-           <plugin-config :config="config"></plugin-config>
+          <plugin-config :config="config"></plugin-config>
         </el-collapse-item>
       </el-collapse>
     </div>
-     <!-- 图表配置内容 -->
-      <!-- <div class="config bottom">
+    <!-- 图表配置内容 -->
+    <!-- <div class="config bottom">
    
       </div> -->
   </div>
@@ -45,12 +49,14 @@ import StyleConfig from "./configs/StyleConfig.vue";
 import PluginConfig from "./configs/PluginConfig.vue";
 import { default as defaultConfig } from "../../../packages/indexConfig.js";
 import { default as data } from "../../../packages/indexData.js";
+import { types } from "../../../../static/chartType.js";
 export default {
   name: "configCommon",
   data() {
     return {
       chartType: "table",
-      activeName: "1"
+      activeName: "1",
+      imgType: {}
     };
   },
   components: {
@@ -65,13 +71,6 @@ export default {
       default: () => {
         return {};
       }
-    },
-    chartArr: {
-      required: true,
-      type: Array,
-      default: () => {
-        return [];
-      }
     }
   },
   beforeMount() {
@@ -80,6 +79,9 @@ export default {
       "settings",
       Object.assign({}, defaultConfig[`config_${this.config.chart}`])
     );
+  },
+  created() {
+    this.imgType = types;
   },
   mounted() {
     this.setCollapseHeight();
@@ -98,6 +100,7 @@ export default {
       // });
     },
     setType(item) {
+      console.log(item)
       this.$set(this.config, "type", item.type);
       this.$set(this.config, "chart", item.chart);
       this.$set(this.config, "isAxis", item.isAxis);
@@ -113,7 +116,7 @@ export default {
         "data",
         data[`data_${this.config.settings.chart}`]
       );
-    }
+    },
   }
 };
 </script>

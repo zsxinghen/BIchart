@@ -37,7 +37,7 @@
               <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
-            <super-layout :config="configData" ref="superLayout" :isToolbar="false"></super-layout>
+            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"></super-layout>
           </div>
         </div>
         <div v-if="currentFile.reportType=='专业模板'" style="height:100%">
@@ -56,6 +56,7 @@
   </div>
 </template>
 <script>
+import { mapMutations } from "vuex";
 import siderBar from "../../common/sider-bar";
 import superLayout from "../../common/superLayout";
 import boardConfigTitle from "../../components/board-center/board-config-title";
@@ -67,31 +68,30 @@ import { default as layoutUrls } from "../../api/urls/layout-center.js";
 export default {
   data() {
     return {
-      currentFile:{
-        id:-1
+      currentFile: {
+        id: -1
       },
-      defaultProp:{children:"reports"},
+      defaultProp: { children: "reports" },
       configData: {
         layout: [],
         rowHeight: 200,
         isDraggable: false,
         isResizable: false,
         line: 1,
-        bgConfig:{
-          type:'null',
-          imageUrl:'',
-          opacticy:1
+        bgConfig: {
+          type: "null",
+          imageUrl: "",
+          opacticy: 1
         },
-        titleConfig:{
-          title:{},
-          subTitle:{}
+        titleConfig: {
+          title: {},
+          subTitle: {}
         }
       },
-      bgconfig:{
-      },
-      titleConfig:{
-        title:{},
-        subTitle:{}
+      bgconfig: {},
+      titleConfig: {
+        title: {},
+        subTitle: {}
       },
       url: null
     };
@@ -100,83 +100,114 @@ export default {
     this.url = urls;
   },
   methods: {
-    setBg(){
-      if(this.configData.bgConfig.type=='null'){
-        return "#fff"
-      }else if(this.configData.bgConfig.type=='bgColor'){
-        return this.configData.bgConfig.color
-      }else{
-        return 'url('+this.configData.bgConfig.imageUrl+')'
+    ...mapMutations(["setCurrConfigs"]),
+    setBg() {
+      if (this.configData.bgConfig.type == "null") {
+        return "#fff";
+      } else if (this.configData.bgConfig.type == "bgColor") {
+        return this.configData.bgConfig.color;
+      } else {
+        return "url(" + this.configData.bgConfig.imageUrl + ")";
       }
     },
-    setStyle(type){
-      var str="";
-      if(this.configData.titleConfig[type].fontsize){
-        str=str+'font-size:'+this.configData.titleConfig[type].fontsize+'px;'
-      }else{
-        str=str+'font-size:12px'
+    setStyle(type) {
+      var str = "";
+      if (this.configData.titleConfig[type].fontsize) {
+        str =
+          str +
+          "font-size:" +
+          this.configData.titleConfig[type].fontsize +
+          "px;";
+      } else {
+        str = str + "font-size:12px";
       }
-      if(this.configData.titleConfig[type].fontFamily){
-        str=str+'font-family:'+this.configData.titleConfig[type].fontFamily+';'
-      }else{
-        str=str+'fontFamily:SimHei;'
+      if (this.configData.titleConfig[type].fontFamily) {
+        str =
+          str +
+          "font-family:" +
+          this.configData.titleConfig[type].fontFamily +
+          ";";
+      } else {
+        str = str + "fontFamily:SimHei;";
       }
-      if(this.configData.titleConfig[type].color){
-        str=str+'color:'+this.configData.titleConfig[type].color+';'
-      }else{
-        str=str+'color:#000;'
+      if (this.configData.titleConfig[type].color) {
+        str = str + "color:" + this.configData.titleConfig[type].color + ";";
+      } else {
+        str = str + "color:#000;";
       }
-      if(this.configData.titleConfig[type].position=='left'||this.configData.titleConfig[type].position=='right'){
-        if(this.configData.titleConfig.title.position===this.configData.titleConfig.subTitle.position){
-          str=str+'text-align:'+this.configData.titleConfig.subTitle.position+';'
-        }else{
-          str=str+'float:'+this.configData.titleConfig[type].position+';'
+      if (
+        this.configData.titleConfig[type].position == "left" ||
+        this.configData.titleConfig[type].position == "right"
+      ) {
+        if (
+          this.configData.titleConfig.title.position ===
+          this.configData.titleConfig.subTitle.position
+        ) {
+          str =
+            str +
+            "text-align:" +
+            this.configData.titleConfig.subTitle.position +
+            ";";
+        } else {
+          str =
+            str + "float:" + this.configData.titleConfig[type].position + ";";
         }
-      }else{
-        str=str+'text-align:center;'
+      } else {
+        str = str + "text-align:center;";
       }
-      if(this.configData.titleConfig[type].isShow){
-        str=str+'display:block;'
-      }else{
-        str=str+'display:none;'
+      if (this.configData.titleConfig[type].isShow) {
+        str = str + "display:block;";
+      } else {
+        str = str + "display:none;";
       }
-      return str
+      return str;
     },
-    handleCommand(command){
-      if(command=='背景设置'){
-        this.bgconfig={...this.configData.bgConfig}
-        this.$refs.bgSet.show()
-      }else if(command=='布局设置'){
-        this.$apis.fetchPost(layoutUrls.sideBar.search, {
+    handleCommand(command) {
+      if (command == "背景设置") {
+        this.bgconfig = { ...this.configData.bgConfig };
+        this.$refs.bgSet.show();
+      } else if (command == "布局设置") {
+        this.$apis
+          .fetchPost(layoutUrls.sideBar.search, {
             params: {},
             Vue: this
-        }).then(res => {
+          })
+          .then(res => {
             if (res.result) {
-                this.$refs.layoutSet.show(res.model)
+              this.$refs.layoutSet.show(res.model);
             }
-        });
-      }else if(command=='标题设置'){
-        this.titleConfig=JSON.parse(JSON.stringify(this.configData.titleConfig))
-        this.$refs.titleSet.show()
+          });
+      } else if (command == "标题设置") {
+        this.titleConfig = JSON.parse(
+          JSON.stringify(this.configData.titleConfig)
+        );
+        this.$refs.titleSet.show();
       }
     },
-    currentChange(data){
-      this.currentFile=data
+    currentChange(data) {
+      this.currentFile = data;
     },
-    saveSuccess(data){
-      this.currentFile.config=data.config
-      this.configData.bgConfig=JSON.parse(data.config).bgConfig
+    saveSuccess(data) {
+      this.currentFile.config = data.config;
+      this.configData.bgConfig = JSON.parse(data.config).bgConfig;
     },
-    layoutSuccess(data){
-      console.log(data)
-      this.currentFile.layoutConfig=data
-      this.configData.layout=JSON.parse(data).layout
+    layoutSuccess(data) {
+      console.log(data);
+      this.currentFile.layoutConfig = data;
+      this.configData.layout = JSON.parse(data).layout;
     },
-    titleSuccess(data){
-      console.log(JSON.parse(data.config).titleConfig)
-      this.currentFile.config=data.config
-      this.configData.titleConfig=JSON.parse(data.config).titleConfig
+    titleSuccess(data) {
+      console.log(JSON.parse(data.config).titleConfig);
+      this.currentFile.config = data.config;
+      this.configData.titleConfig = JSON.parse(data.config).titleConfig;
     },
+    /*
+     *把当前图表信息存入vuex
+     */
+    handleEdit(data, index) {
+      this.setCurrConfigs(data);
+      this.$router.push("/chartCenter");
+    }
   },
   components: {
     siderBar,
@@ -189,50 +220,50 @@ export default {
 };
 </script>
 <style lang="less">
-  .board-center {
-    display: flex;
-    justify-content: space-between;
-    .board-display {
-      flex: 1;
-      padding: 10px 10px 0 0;
+.board-center {
+  display: flex;
+  justify-content: space-between;
+  .board-display {
+    flex: 1;
+    padding: 10px 10px 0 0;
+    height: 100%;
+    box-sizing: border-box;
+    .board-display-body {
+      width: 100%;
+      background-color: white;
+      padding: 10px;
+      border-radius: 5px;
+      box-shadow: 0px 2px 5px 0px rgba(24, 27, 45, 0.14);
       height: 100%;
       box-sizing: border-box;
-      .board-display-body {
+      overflow: auto;
+      display: flex;
+      flex-direction: column;
+      .board-display-header {
         width: 100%;
-        background-color: white;
-        padding: 10px;
-        border-radius: 5px;
-        box-shadow: 0px 2px 5px 0px rgba(24, 27, 45, 0.14);
-        height: 100%;
         box-sizing: border-box;
-        overflow: auto;
-        display: flex;
-        flex-direction: column;
-        .board-display-header {
-          width: 100%;
-          box-sizing: border-box;
-          height: 32px;
-        }
-        .layout-display-body::-webkit-scrollbar {
-          display: none;
-        }
+        height: 32px;
       }
-      .boar-display-body::-webkit-scrollbar {
+      .layout-display-body::-webkit-scrollbar {
         display: none;
       }
     }
-    .main-body{
-    flex:1
-    }
-    .main-title{
-      height: 40px;
-      line-height: 40px;
-      padding: 0 5px;
-    }
-    .sub-title{
-      height: 40px;
-      line-height: 40px;
-      padding: 0 5px;
+    .boar-display-body::-webkit-scrollbar {
+      display: none;
     }
   }
+  .main-body {
+    flex: 1;
+  }
+  .main-title {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 5px;
+  }
+  .sub-title {
+    height: 40px;
+    line-height: 40px;
+    padding: 0 5px;
+  }
+}
 </style>
