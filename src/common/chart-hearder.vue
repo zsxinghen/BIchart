@@ -4,7 +4,10 @@
         class="el-icon-arrow-left"
         @click="back"
       ><span>编辑图表</span></i></div>
-    <div class="chart-header-right"><i class="iconfont icon-baocun" @click="save"><span>保存</span></i></div>
+    <div class="chart-header-right"><i
+        class="iconfont icon-baocun"
+        @click="save"
+      ><span>保存</span></i></div>
   </div>
 </template>
 <script>
@@ -22,7 +25,12 @@ export default {
     // 维度 veidoo;
     // 图表配置信息 picConfig
     save() {
-      // let url=
+      // 本地数据
+      let param = {
+        figure: this.config.dataConfig.numberValue,
+        veidoo: this.config.dataConfig.dimension,
+        picConfig: JSON.stringify(this.config).replace(/\%/g, "$"),
+      };
       this.$apis
         .fetchPost(url, {
           params: param,
@@ -51,7 +59,7 @@ export default {
             });
           }
         });
-    }
+    },
   }
 };
 </script>
