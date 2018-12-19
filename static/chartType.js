@@ -43,7 +43,7 @@ export const types = (a, b) => {
       icon: "icon-xuritu",
       content1: "1个维度,1个数值",
       content2: " 0维度,多数值",
-      isAble: (a.length == 1 && b.length == 1) || (a.length == 0 && b.length > 0)
+      isAble: (a.length >= 2 && b.length == 1)
     },
     {
       type: "chart",
@@ -124,9 +124,9 @@ export const types = (a, b) => {
       chart: 'wordcloud', // 字符云
       name: '字符云',
       icon: "icon-zujian-zifuyun",
-      content1: " 0维度,多数值",
-      content2: " ",
-      isAble: (a.length == 0 && b.length > 0)
+      content1: "1个维度,1个数值",
+      content2: " 0维度,多数值",
+      isAble: (a.length == 1 && b.length == 1) || (a.length == 0 && b.length > 0)
     },
     // {
     //   type: "chart",

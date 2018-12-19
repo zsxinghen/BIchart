@@ -2,7 +2,6 @@
   <div class="app">
     <!-- 头部 -->
     <board-hearder v-if="currRoute!=='chartCenter'"></board-hearder>
-    <chart-hearder v-if="currRoute==='chartCenter'"></chart-hearder>
     <!-- 路由 -->
     <div class="router-view">
        <router-view/>
@@ -15,7 +14,7 @@
 <script>
 import { mapMutations } from "vuex";
 import boardHearder from "./common/board-hearder";
-import chartHearder from "./common/chart-hearder";
+// import chartHearder from "./common/chart-hearder";
 export default {
   props: ["boardApi", "accountName", "accountEnglist", "appLogo"],
   data() {
@@ -45,7 +44,7 @@ export default {
   },
   components: {
     boardHearder,
-    chartHearder
+    // chartHearder
   }
 };
 </script>
@@ -59,12 +58,6 @@ export default {
   height: 100%;
   .board-hearder {
     flex: 0 0 80px !important;
-  }
-  .chart-hearder {
-    flex: 0 0 80px !important;
-    background-color: #f0f2f3;
-    margin-bottom: 10px;
-    box-shadow: 0px 3px 5px rgba(24, 27, 45, 0.2);
   }
   .router-view {
     flex: 1;

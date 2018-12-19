@@ -4,17 +4,53 @@
         class="el-icon-arrow-left"
         @click="back"
       ><span>编辑图表</span></i></div>
-    <div class="chart-header-right"><i class="iconfont icon-baocun"><span>保存</span></i></div>
+    <div class="chart-header-right"><i class="iconfont icon-baocun" @click="save"><span>保存</span></i></div>
   </div>
 </template>
 <script>
+import { default as urls } from "../api/urls/chart-center";
 export default {
   data() {
     return {};
   },
+  props: ["config"],
   methods: {
     back() {
       this.$router.push("/");
+    },
+    // 数值 figure;
+    // 维度 veidoo;
+    // 图表配置信息 picConfig
+    save() {
+      // let url=
+      this.$apis
+        .fetchPost(url, {
+          params: param,
+          Vue: this
+        })
+        .then(res => {
+          if (res.result) {
+            this.config.dataConfig.list = [];
+            this.config.dataConfig.id = res.model.id;
+            console.log(this.config.dataConfig, res.model);
+            res.model.keyls.forEach(val => {
+              this.config.dataConfig.list.push({
+                name: val,
+                prop: val
+              });
+            });
+            this.close();
+            this.$message({
+              type: "success",
+              message: res.message
+            });
+          } else {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        });
     }
   }
 };

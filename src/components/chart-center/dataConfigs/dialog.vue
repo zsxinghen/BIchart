@@ -116,7 +116,7 @@ export default {
     save() {
       if (this.ruleForm.sourceType === "local") {
         //本地
-        if (this.ruleForm.id || this.ruleForm.id == 0) {
+        if (this.ruleForm.id || this.ruleForm.id === 0) {
           this.getLocalData(urls.updUrl, { id: this.ruleForm.id }); // 编辑本地数据源
         } else {
           this.getLocalData(urls.addUrl); // 新增本地数据源
@@ -135,7 +135,6 @@ export default {
             domain: this.ruleForm.domain,
             ...obj
           };
-          console.log(param);
           this.$apis
             .fetchPost(url, {
               params: param,
@@ -143,6 +142,16 @@ export default {
             })
             .then(res => {
               if (res.result) {
+                this.config.dataConfig.list = [];
+                this.config.dataConfig.id = res.model.id;
+                console.log( this.config.dataConfig,res.model)
+                res.model.keyls.forEach(val => {
+                  this.config.dataConfig.list.push({
+                    name: val,
+                    prop: val
+                  });
+                });
+                this.close();
                 this.$message({
                   type: "success",
                   message: res.message

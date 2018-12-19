@@ -1,7 +1,7 @@
 /* 旭日图 */
 export const data_sunburst = [{ //tree
     name: 'Flora',
-    value: 30,
+    // value: 30,
     children: [{
       name: 'a',
       value: 10,
@@ -13,7 +13,7 @@ export const data_sunburst = [{ //tree
     }]
   }, {
     name: 'd',
-    value: 10,
+    // value: 10,
     children: [{
       name: 'c',
       value: 5,

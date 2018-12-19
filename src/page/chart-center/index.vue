@@ -1,4 +1,6 @@
 <template>
+ <div style="display:flex ; flex-direction: column;height: 100%;">
+    <chart-hearder :config="config" ></chart-hearder>
   <div class="chart-center">
     <!-- 左边  数据部分 -->
     <div class="main left">
@@ -108,7 +110,6 @@
           <el-button type="text">事件配置</el-button>
           <el-button type="text">监听参数</el-button>
           <el-button type="text">更新配置</el-button>
-          {{config.data}}
         </div>
       </div>
       <!-- 图表侧边栏 -->
@@ -133,11 +134,13 @@
       ></configs>
     </div>
   </div>
+  </div>
 </template>
 <script>
 import chart from "../../components/chart-center/charts/index.vue";
 import configs from "../../components/chart-center/chartConfigs/index.vue";
 import dataSource from "../../components/chart-center/dataConfigs/dialog.vue";
+import chartHearder from "../../common/chart-hearder.vue";
 import { types } from "../../../static/chartType.js";
 import { mapGetters } from "vuex";
 export default {
@@ -160,22 +163,30 @@ export default {
           sourceType: "local",
           tableName: "",
           domain: null,
-          /* 左边列表部分 */
+          /* 左边列表部分
+          name--显示名称 ，porp字段名
+          */
+          id: "",
           list: [
             {
-              name: "id"
+              name: "id",
+              prop: "id"
             },
             {
-              name: "name"
+              name: "11",
+              prop: "name"
             },
             {
-              name: "category"
+              name: "category",
+              prop: "category"
             },
             {
-              name: "444"
+              name: "444",
+              prop: "name"
             },
             {
-              name: "555"
+              name: "555",
+              prop: "555"
             }
           ],
           /* 中间头部配置部分 */
@@ -190,7 +201,8 @@ export default {
   components: {
     chart,
     configs,
-    dataSource
+    dataSource,
+    chartHearder
   },
   computed: {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
@@ -217,51 +229,52 @@ export default {
     setChartData() {
       this.$set(this.config, "data", null);
       setTimeout(() => {
-        let json = [
-          {
-            id: "12987122",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987123",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987125",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987126",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          }
-        ];
-        let data = this.$setData.listData(
-          this.config.chart,
-          json,
-          this.config.dataConfig.dimension,
-          this.config.dataConfig.numberValue
-        );
-        this.$set(this.config, "data", data);
+        this.$store.dispatch("getList", this);
+        // let json = [
+        //   {
+        //     id: "122",
+        //     name: "113",
+        //     category: "22",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987123",
+        //     name: "好滋好味鸡蛋仔",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987125",
+        //     name: "好滋好味鸡蛋仔",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987126",
+        //     name: "好滋好味鸡蛋仔",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   }
+        // ];
+        // let data = this.$setData.listData(
+        //   this.config.chart,
+        //   json,
+        //   this.config.dataConfig.dimension,
+        //   this.config.dataConfig.numberValue
+        // );
+        // this.$set(this.config, "data", data);
       }, 100);
       this.resetChartType();
     },
@@ -342,5 +355,11 @@ export default {
   padding: 10px;
   border: 1px solid #aaaaaa;
   user-select: none;
+}
+.chart-hearder {
+  flex: 0 0 80px !important;
+  background-color: #f0f2f3;
+  margin-bottom: 10px;
+  box-shadow: 0px 3px 5px rgba(24, 27, 45, 0.2);
 }
 </style>
