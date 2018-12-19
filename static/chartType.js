@@ -34,17 +34,17 @@ export const types = (a, b) => {
       content2: " 0维度,多数值",
       isAble: (a.length == 1 && b.length == 1) || (a.length == 0 && b.length > 0)
     },
-    {
-      type: "chart",
-      chart: 'sunburst', // 旭日图
-      name: '旭日图',
-      isAxis: false,
-      isVisualMap: true,
-      icon: "icon-xuritu",
-      content1: "1个维度,1个数值",
-      content2: " 0维度,多数值",
-      isAble: (a.length >= 2 && b.length == 1)
-    },
+    // {
+    //   type: "chart",
+    //   chart: 'sunburst', // 旭日图
+    //   name: '旭日图',
+    //   isAxis: false,
+    //   isVisualMap: true,
+    //   icon: "icon-xuritu",
+    //   content1: "1个维度,1个数值",
+    //   content2: " 0维度,多数值",
+    //   isAble: (a.length >= 2 && b.length == 1)
+    // },
     {
       type: "chart",
       chart: 'gauge', // 仪表盘

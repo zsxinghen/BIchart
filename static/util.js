@@ -23,9 +23,9 @@ export default {
       case 'pie':
         data = this.setPieData(tableData, dimension, numberValue);
         break;
-      case 'sunburst':
-        data = this.setSunburstData(tableData, dimension, numberValue);
-        break;
+      // case 'sunburst':
+      //   data = this.setSunburstData(tableData, dimension, numberValue);
+      //   break;
       case 'funnel':
         data = this.setPieData(tableData, dimension, numberValue);
         break;
@@ -162,9 +162,38 @@ export default {
     })
     return valArr
   },
-  setSunburstData(tableData, dimension, numberValue) {
-    // 2个或多个维度,1个数值---维度靠前的为父级，靠后为子集，最后为数值
-    let tree = [];
-
-  }
+  // setSunburstData(tableData, dimension, numberValue) {
+  //   // 2个或多个维度,1个数值---维度靠前的为父级，靠后为子集，最后为数值
+  //   let tree = [],
+  //     arr = []
+  //     mapArr=[];
+  //   let flag = [...dimension].findIndex(v => v.prop == numberValue[0].prop)
+  //   if (flag != -1) {
+  //     let array = [...dimension];
+  //     array.splice(flag, 1);
+  //     arr = array.concat([...numberValue])
+  //   } else {
+  //     arr = [...dimension].concat([...numberValue])
+  //   }
+  //   // 前面是后面的父级
+  //   [...tableData].forEach(v=>{
+  //     for(let i=0;i<arr.length;i++){
+  //       if(i===arr.length){
+  //         obj={
+  //           name: arr[i].name,
+  //           value: v[arr[i].prop],
+  //           children: []
+  //         }
+  //       }
+  //       else{
+  //         obj={
+  //           name: arr[i].name,
+  //           children: []
+  //         }
+  //       }
+  //     }
+  //   })
+  //   return tree
+  // },
+  // 递归算法
 }
