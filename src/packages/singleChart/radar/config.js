@@ -126,7 +126,7 @@ export default {
           name: config.series.name,
           type: 'radar',
           data: data,
-          animation: false,
+          animation: true,
           itemStyle: {
             normal: {
               ...this.setAreaStyle(config),

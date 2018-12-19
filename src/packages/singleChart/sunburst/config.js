@@ -78,7 +78,7 @@ export default {
             fontFamily: config.series.fontFamliy,
             fontSize: config.series.fontSize,
           },
-          animation:false,
+          animation:true,
         }
       };
       return option

@@ -262,7 +262,7 @@ export default {
         label: {
           normal: {
             show: config.series.isShow,
-            position: 'top',
+            position:  config.barType == 'xBar'?'top':'right',
             textStyle: {
               color: config.series.color,
               fontFamily: config.series.fontFamily,

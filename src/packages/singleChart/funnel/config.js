@@ -50,7 +50,7 @@ export default {
           gap: config.series.gap,
           label: {
             normal: {
-              show: true,
+              show: config.series.isShow,
               position: config.series.position
             },
             emphasis: {
