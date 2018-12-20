@@ -268,8 +268,9 @@ export default {
               let index = res.model.findIndex(
                 v => node.folderId == v.id
               );
-              console.log(res.model);
               res.model[index].isOpen = true;
+              let  i=res.model[index].report.findIndex(v=>node.id=v.id);
+                this.setActiveBar(res.model[index].report[i])
             }
             res.model.forEach((val, i) => {
               let index = oldStatus.findIndex(v => v.id == val.id);

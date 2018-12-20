@@ -48,6 +48,7 @@ export default {
           this_.config.dataConfig.numberValue
         )
         this_.$set(this_.config, "data", data);
+        this_.$forceUpdate();
       })
   }
 }
