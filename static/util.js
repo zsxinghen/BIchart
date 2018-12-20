@@ -1,11 +1,3 @@
-/* 报表数据部分 */
-import {
-  default as $apis
-} from "../src/api/public.js";
-import {
-  default as urls
-} from "../src/api/urls/chart-center.js";
-/* 获取数据 */
 /* 处理数据 */
 export default {
   listData(type, tableData, dimension, numberValue) {
@@ -23,9 +15,9 @@ export default {
       case 'pie':
         data = this.setPieData(tableData, dimension, numberValue);
         break;
-      // case 'sunburst':
-      //   data = this.setSunburstData(tableData, dimension, numberValue);
-      //   break;
+        // case 'sunburst':
+        //   data = this.setSunburstData(tableData, dimension, numberValue);
+        //   break;
       case 'funnel':
         data = this.setPieData(tableData, dimension, numberValue);
         break;

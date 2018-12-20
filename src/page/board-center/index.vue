@@ -3,9 +3,10 @@
 */
 <template>
   <div class="board-center">
-    <!-- {{configData}} -->
     <!-- 侧边栏 -->
-    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig" @currentChange="currentChange">
+    <!-- {{getCurrNode}} -->
+    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig"
+      @currentChange="currentChange" @boardHandler="boardHandler">
       <el-dropdown>
         <span class="el-dropdown-link">
           <i class="iconfont icon-gengduo"></i>
@@ -17,7 +18,7 @@
     </sider-bar>
     <!-- 布局展示 -->
     <div class="board-display">
-      <div class="board-display-body" >
+      <div class="board-display-body">
         <div v-if="currentFile.reportType=='自定义'">
           <div class="board-display-header">
             <el-dropdown @command="handleCommand">
@@ -37,7 +38,11 @@
               <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
-            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"></super-layout>
+            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit">
+              <template slot-scope="{data}">
+                <charts-view :id="data.i" :config="data.config" v-if="data.config"></charts-view>
+              </template>
+            </super-layout>
           </div>
         </div>
         <div v-if="currentFile.reportType=='专业模板'" style="height:100%">
@@ -56,27 +61,31 @@
   </div>
 </template>
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters ,mapMutations } from "vuex";
 import siderBar from "../../common/sider-bar";
 import superLayout from "../../common/superLayout";
 import boardConfigTitle from "../../components/board-center/board-config-title";
 import boardConfigBackground from "../../components/board-center/board-config-background";
 import boardConfigLayout from "../../components/board-center/board-config-layout";
 import boardConfigParam from "../../components/board-center/board-config-param";
+import chartsView from "../../components/chart-center/charts/index.vue";
 import { default as urls } from "../../api/urls/board-center.js";
 import { default as layoutUrls } from "../../api/urls/layout-center.js";
+
 export default {
   data() {
     return {
       currentFile: {
         id: -1
       },
-      defaultProp: { children: "reports" },
+      defaultProp: {
+        children: "reports"
+      },
       configData: {
         layout: [],
         rowHeight: 200,
-        isDraggable: false,
-        isResizable: false,
+        isDraggable: true,
+        isResizable: true,
         line: 1,
         bgConfig: {
           type: "null",
@@ -104,6 +113,16 @@ export default {
   },
   created() {
     this.url = urls;
+  },
+  computed: {
+    ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
+  },
+  mounted() {
+    // if (this.getCurrNode) {
+    //   this.$nextTick(() => {
+    //     this.currentNode = this.getCurrNode;
+    //   });
+    // }
   },
   methods: {
     ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
@@ -198,7 +217,6 @@ export default {
       this.configData.bgConfig = JSON.parse(data.config).bgConfig;
     },
     layoutSuccess(data) {
-      console.log(data);
       this.currentFile.layoutConfig = data;
       this.configData.layout = JSON.parse(data).layout;
     },
@@ -215,6 +233,68 @@ export default {
       this.setCurrNode(this.currentNode);
       this.setCurrchartId(data.i);
       this.$router.push("/chartCenter");
+    },
+    boardHandler(res, data) {
+      this.$set(data, "layoutConfig", res.model.layoutConfig);
+      this.$set(data, "layoutId", res.model.layoutId);
+      this.configData.layout = JSON.parse(res.model.layoutConfig).layout;
+      res.model.datasourceLocationValueDtos.forEach(v => {
+        let flag = this.configData.layout.findIndex(k => k.i === v.reportId);
+        if (flag != -1) {
+          this.configData.layout[flag].config = JSON.parse(
+            v.picConfig.replace(/\$/g, "%")
+          );
+        }
+      });
+      this.configData.layout.forEach(v => {});
+      if (res.model.config) {
+        // 数据部分
+        // this.configData.layout
+
+        // 背景、标题部分
+        this.$set(data, "config", res.model.config);
+        if (JSON.parse(res.model.config).bgConfig) {
+          this.configData.bgConfig = JSON.parse(res.model.config).bgConfig;
+        } else {
+          this.configData.bgConfig = {
+            type: "null",
+            opacticy: 1
+          };
+        }
+        if (JSON.parse(res.model.config).titleConfig) {
+          this.configData.titleConfig = JSON.parse(
+            res.model.config
+          ).titleConfig;
+        } else {
+          this.configData.titleConfig = {
+            title: {},
+            subTitle: {}
+          };
+        }
+      } else {
+        this.$set(
+          data,
+          "config",
+          JSON.stringify({
+            bgConfig: {
+              type: "null",
+              opacticy: 1
+            },
+            titleConfig: {
+              title: {},
+              subTitle: {}
+            }
+          })
+        );
+        this.configData.bgConfig = {
+          type: "null",
+          opacticy: 1
+        };
+        this.configData.titleConfig = {
+          title: {},
+          subTitle: {}
+        };
+      }
     }
   },
   components: {
@@ -223,7 +303,8 @@ export default {
     boardConfigTitle,
     boardConfigBackground,
     boardConfigLayout,
-    boardConfigParam
+    boardConfigParam,
+    chartsView
   }
 };
 </script>
@@ -236,6 +317,7 @@ export default {
     padding: 10px 10px 0 0;
     height: 100%;
     box-sizing: border-box;
+
     .board-display-body {
       width: 100%;
       background-color: white;
@@ -247,27 +329,33 @@ export default {
       overflow: auto;
       display: flex;
       flex-direction: column;
+
       .board-display-header {
         width: 100%;
         box-sizing: border-box;
         height: 32px;
       }
+
       .layout-display-body::-webkit-scrollbar {
         display: none;
       }
     }
+
     .boar-display-body::-webkit-scrollbar {
       display: none;
     }
   }
+
   .main-body {
     flex: 1;
   }
+
   .main-title {
     height: 40px;
     line-height: 40px;
     padding: 0 5px;
   }
+
   .sub-title {
     height: 40px;
     line-height: 40px;

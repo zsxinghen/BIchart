@@ -1,5 +1,5 @@
 <template>
-  <div class="my-chart">
+  <div :class="'my-chart '+ id">
     <component :is="`my-${config.type}`" :config="config" :id="id" v-if="config.data">
     </component>
     <loading v-else-if="!config.data"></loading>
@@ -24,7 +24,29 @@ export default {
     myChart,
     loading
   },
-  mounted() {}
+  created() {
+    this.config.data = null;
+  },
+  beforeMount() {
+    this.config.data = null;
+    if (this.config.dataConfig.list.length){
+      setTimeout(() => {
+        this.$store.dispatch("getList", this);
+      }, 100);
+    }
+  },
+  mounted() {
+    console.log("mounted", this.config.data);
+  },
+  methods: {},
+  watch: {
+    "config.data": {
+      deep: true,
+      handler() {
+        console.log(111, this);
+      }
+    }
+  }
 };
 </script>
 <style lang="less">

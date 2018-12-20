@@ -10,6 +10,7 @@
       :use-css-transforms="true">
       <grid-item class="effect" 
         :class="['effect'+item.i]" 
+        :id="['effect'+item.i]" 
         v-for="(item,index) in config.layout" 
         :x="item.x" 
         :y="item.y" 

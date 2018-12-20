@@ -22,15 +22,18 @@
           v-for="item in imgType(config.dataConfig.dimension,config.dataConfig.numberValue)"
           :key="item.chart"
           :class="[
-        {'active':chartType===item.chart},
-        {'':chartType!==item.chart}]"
+        {'active':config.chart===item.chart},
+        {'':config.chart!==item.chart}]"
         >
           <el-tooltip
             class="item"
             effect="dark"
-            :content="item.name"
             placement="top-start"
           >
+            <div slot="content">
+              {{item.name}}<br/><br/>
+              {{item.content1}}<br/>
+              {{item.content2}}</div>
             <!-- <div>{{item.content1}}</div><div>{{item.content2}}</div> -->
             <i
               :class="'iconfont '+item.icon"
@@ -89,7 +92,7 @@ export default {
   name: "configCommon",
   data() {
     return {
-      chartType: "table",
+      // chartType: "table",
       activeName: "1",
       imgType: {}
     };
@@ -139,7 +142,7 @@ export default {
       this.$set(this.config, "chart", item.chart);
       this.$set(this.config, "isAxis", item.isAxis);
       this.$set(this.config, "isVisualMap", item.isVisualMap);
-      this.chartType = item.chart;
+      // this.chartType = item.chart;
       this.$set(
         this.config,
         "settings",
@@ -155,52 +158,52 @@ export default {
     setData() {
       this.$set(this.config, "data", null);
       setTimeout(() => {
-        // this.$store.dispatch("getList", this);
-        let json = [
-          {
-            id: "12987122",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987123",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987125",
-            name: "好滋好味鸡蛋仔2",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987126",
-            name: "好滋好味鸡蛋仔3",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          }
-        ];
-        let data = this.$setData.listData(
-          this.config.chart,
-          json,
-          this.config.dataConfig.dimension,
-          this.config.dataConfig.numberValue
-        );
-        this.$set(this.config, "data", data);
+        this.$store.dispatch("getList", this);
+        // let json = [
+        //   {
+        //     id: "12987122",
+        //     name: "好滋好味鸡蛋仔",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987123",
+        //     name: "好滋好味鸡蛋仔",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987125",
+        //     name: "好滋好味鸡蛋仔2",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   },
+        //   {
+        //     id: "12987126",
+        //     name: "好滋好味鸡蛋仔3",
+        //     category: "江浙小吃、小吃零食",
+        //     desc: "荷兰优质淡奶，奶香浓而不腻",
+        //     address: "上海市普陀区真北路",
+        //     shop: "王小虎夫妻店",
+        //     shopId: "10333"
+        //   }
+        // ];
+        // let data = this.$setData.listData(
+        //   this.config.chart,
+        //   json,
+        //   this.config.dataConfig.dimension,
+        //   this.config.dataConfig.numberValue
+        // );
+        // this.$set(this.config, "data", data);
       }, 100);
     }
   }

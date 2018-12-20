@@ -144,7 +144,9 @@ export default {
               if (res.result) {
                 this.config.dataConfig.list = [];
                 this.config.dataConfig.id = res.model.id;
-                console.log( this.config.dataConfig,res.model)
+                this.config.dataConfig.sourceType =this.ruleForm.sourceType;
+                this.config.dataConfig.tableName = this.ruleForm.tableName;
+                this.config.dataConfig.domain =this.ruleForm.domain;
                 res.model.keyls.forEach(val => {
                   this.config.dataConfig.list.push({
                     name: val,

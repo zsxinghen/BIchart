@@ -65,7 +65,7 @@ export const data_pie = {
       radius: '55%',
       inRange:60,
       outRange:80,
-      range:100,
+      range:50,
       center: ['50%', '50%'],
     },
     animation: "expansion",

@@ -61,6 +61,7 @@ import layoutAddFile from "../components/sidebar/layout-addFile";
 import layoutEidt from "../components/sidebar/layout-eidt";
 import layoutAdd from "../components/sidebar/layout-add";
 import boardAdd from "../components/board-center/board-config-add";
+import { mapGetters, mapMutations } from "vuex";
 export default {
   data() {
     return {
@@ -78,9 +79,7 @@ export default {
         lastParentId: null, // 拖拽经过的上一个节点
         dragParentNode: null // 被拖拽父节点
       },
-      sidbarData: [
-       
-      ],
+      sidbarData: [],
       emptyText: "暂无数据"
     };
   },
@@ -98,7 +97,7 @@ export default {
     currentNode: {
       type: Object,
       default: () => {
-        return{}
+        return {};
       },
       require: true
     },
@@ -107,17 +106,19 @@ export default {
       default: () => {},
       require: true
     },
-    prop:{
-      default(){
+    prop: {
+      default() {
         return {
-          children:'layouts'
-        }
+          children: "layouts"
+        };
       }
     }
   },
-
+  computed: {
+    ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
+  },
   mounted() {
-    this.filterData();
+    this.filterData(this.getCurrNode);
   },
   methods: {
     /*
@@ -150,90 +151,51 @@ export default {
       this.activeBar = data;
       this.$set(data, "isActive", true);
       this.getDesign(data);
-      this.$emit('currentChange',data)
+      this.$emit("currentChange", data);
     },
     /*
      *获取该文件夹详情
      */
     getDesign(data) {
-        console.log(data,'------')
-        this.$apis.fetchPost(this.urls.sideBar.search_layout, {
+      console.log(data, "------");
+      this.$apis
+        .fetchPost(this.urls.sideBar.search_layout, {
           params: {
             id: data.id
           },
           Vue: this
-        }).then(res => {
+        })
+        .then(res => {
           if (res.result) {
-            console.log(res.model)
-            
-              if (this.title == "布局库") {
-                this.$set(data, 'config', res.model.config);
-                if (res.model.config) {
-                  this.$set(this.currentNode,"config",JSON.parse(res.model.config));
-                  this.configData.line = this.currentNode.config.line;
-                  this.configData.layout = this.currentNode.config.layout;
-                } else {
-                  this.configData.line = 0;
-                  this.configData.layout = [];
-                }
-              }else{
-                if(data.reportType=='自定义'){
-                  this.$set(data, 'layoutConfig', res.model.layoutConfig);
-                  this.$set(data,'layoutId',res.model.layoutId)
-                  this.configData.layout =JSON.parse(res.model.layoutConfig).layout;
-                  if(res.model.config){
-                    this.$set(data, 'config', res.model.config);
-                    if(JSON.parse(res.model.config).bgConfig){
-                      this.configData.bgConfig=JSON.parse(res.model.config).bgConfig
-                    }else{
-                      this.configData.bgConfig={
-                        type:'null',
-                        opacticy:1
-                      }
-                    }
-                    if(JSON.parse(res.model.config).titleConfig){
-                      this.configData.titleConfig=JSON.parse(res.model.config).titleConfig
-                    }else{
-                      this.configData.titleConfig={
-                        title:{},
-                        subTitle:{}
-                      }
-                    }
-                  }else{
-                    this.$set(data, 'config', JSON.stringify(
-                        {
-                          bgConfig:
-                        {
-                          type:'null',
-                          opacticy:1
-                        },
-                        titleConfig:
-                        {
-                          title:{},
-                          subTitle:{}
-                        }
-                      }));
-                    this.configData.bgConfig={
-                      type:'null',
-                      opacticy:1
-                    }
-                    this.configData.titleConfig={
-                      title:{},
-                      subTitle:{}
-                    }
-                  }
-                }else{
-                  this.$set(data,'unzipPath',res.model.unzipPath)
-                }
+            console.log(res.model);
+
+            if (this.title == "布局库") {
+              this.$set(data, "config", res.model.config);
+              if (res.model.config) {
+                this.$set(
+                  this.currentNode,
+                  "config",
+                  JSON.parse(res.model.config)
+                );
+                this.configData.line = this.currentNode.config.line;
+                this.configData.layout = this.currentNode.config.layout;
+              } else {
+                this.configData.line = 0;
+                this.configData.layout = [];
               }
-              // 设置节点
-              this.$set(this.currentNode, "alias", res.model.alias);
-              this.$set(this.currentNode, "id", res.model.id);
-              this.$set(this.currentNode, "folderId", res.model.folderId);
-            
+            } else {
+              if (data.reportType == "自定义") {
+                this.$emit("boardHandler", res, data);
+              } else {
+                this.$set(data, "unzipPath", res.model.unzipPath);
+              }
+            }
+            // 设置节点
+            this.$set(this.currentNode, "alias", res.model.alias);
+            this.$set(this.currentNode, "id", res.model.id);
+            this.$set(this.currentNode, "folderId", res.model.folderId);
           }
         });
-      
     },
     /*
      *按钮操作
@@ -286,7 +248,7 @@ export default {
      * 布局中心-看板中心
      * 列表查询
      */
-    filterData() {
+    filterData(node) {
       let param = this.searchData
         ? {
             alias: this.searchData
@@ -294,27 +256,35 @@ export default {
         : {};
       this.emptyText = this.searchData ? "木有查到您需要的数据" : "暂无数据";
 
-      this.$apis.fetchPost(this.urls.sideBar.search, {
-        params: param,
-        Vue: this
-      }).then(res => {
-        if (res.result) {
-          let oldStatus = JSON.parse(JSON.stringify(this.sidbarData));
-
-          res.model.forEach((val, i) => {
-            let index = oldStatus.findIndex(v => v.id == val.id);
-            if (index != -1) {
-              res.model[i].isOpen = oldStatus[index].isOpen;
+      this.$apis
+        .fetchPost(this.urls.sideBar.search, {
+          params: param,
+          Vue: this
+        })
+        .then(res => {
+          if (res.result) {
+            let oldStatus = JSON.parse(JSON.stringify(this.sidbarData));
+            if (node) {
+              let index = res.model.findIndex(
+                v => node.folderId == v.id
+              );
+              console.log(res.model);
+              res.model[index].isOpen = true;
             }
-          }); //设置文件夹查询之前开关状态
-          this.sidbarData = res.model;
-        } else {
-          this.$message({
-            type: "warning",
-            message: res.message
-          });
-        }
-      });
+            res.model.forEach((val, i) => {
+              let index = oldStatus.findIndex(v => v.id == val.id);
+              if (index != -1) {
+                res.model[i].isOpen = oldStatus[index].isOpen;
+              }
+            }); //设置文件夹查询之前开关状态
+            this.sidbarData = res.model;
+          } else {
+            this.$message({
+              type: "warning",
+              message: res.message
+            });
+          }
+        });
     },
     /*
      * 布局中心-看板中心
@@ -362,20 +332,20 @@ export default {
      * 布局（看板） 复制操作
      */
     copy(data, folderId) {
-      var param={}
+      var param = {};
       if (this.title == "布局库") {
-        param={
+        param = {
           alias: data.alias,
           folderId: folderId,
           config: data.config
-        }
-      }else{
-        param={
+        };
+      } else {
+        param = {
           alias: data.alias,
           folderId: folderId,
           layoutId: data.layoutId,
-          reportType:'自定义',
-        }
+          reportType: "自定义"
+        };
       }
       this.$confirm("您正在进行复制操作，确定继续吗？")
         .then(_ => {
@@ -417,7 +387,7 @@ export default {
             })
             .then(res => {
               if (res.result) {
-                this.configData.layout=[]
+                this.configData.layout = [];
                 this.$message({
                   type: "success",
                   message: res.message

@@ -31,7 +31,7 @@ export default {
     });
   },
   beforeMount() {
-    this.$router.push("/chartCenter");
+    this.$router.push("/");
     this.currRoute = this.$route.name;
   },
   methods: {

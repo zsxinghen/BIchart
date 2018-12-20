@@ -1,5 +1,5 @@
 <template>
-      <div :id='id' class="my-bi-chart"></div>
+      <div :id='id+"chart"' class="my-bi-chart"></div>
 </template>
 <script>
 // import echarts from "echarts";
@@ -37,7 +37,7 @@ export default {
   },
   methods: {
     init() {
-      this.chart = echarts.init(document.getElementById(this.id));
+      this.chart = echarts.init(document.getElementById(this.id+'chart'));
       this.chart.off("click"); // 处理点击事件多次触发
       let option = $set[`${this.config.chart}`].setOption(
         this.config.settings,
@@ -57,8 +57,10 @@ export default {
       window.addEventListener("resize", () => {
         chart.resize();
       });
-      $(".effect" + this.id + ">.vue-resizable-handle")
+
+      $("#effect" + this.id + " > .vue-resizable-handle")
         .mousedown(function() {
+          console.log(1111);
           time = setInterval(function() {
             chart.resize();
           }, 100);
@@ -80,7 +82,7 @@ export default {
             this.config.settings,
             this.config.data
           );
-          console.log(JSON.stringify(option))
+          console.log(JSON.stringify(option));
           this.chart.clear(); //清空当前实例，会移除实例中所有的组件和图表
           this.chart.setOption(option);
         } else {
@@ -93,7 +95,7 @@ export default {
               this.config.settings,
               this.config.data
             );
-            
+
             this.chart.setOption(option);
           }
         }

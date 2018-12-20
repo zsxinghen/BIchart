@@ -2,7 +2,7 @@
 export default {
   setRadius(config) {
     if (config.pieType == "type1") {
-      return [0, config.series.range]
+      return [0, config.series.range+'%']
     } else if (config.pieType == "type2") {
       return [config.series.inRange + '%', config.series.outRange + '%']
     } else if (config.pieType == "type3") {

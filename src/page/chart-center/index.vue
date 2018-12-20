@@ -168,26 +168,26 @@ export default {
           */
           id: "",
           list: [
-            {
-              name: "id",
-              prop: "id"
-            },
-            {
-              name: "11",
-              prop: "name"
-            },
-            {
-              name: "category",
-              prop: "category"
-            },
-            {
-              name: "444",
-              prop: "name"
-            },
-            {
-              name: "555",
-              prop: "555"
-            }
+            // {
+            //   name: "id",
+            //   prop: "id"
+            // },
+            // {
+            //   name: "11",
+            //   prop: "name"
+            // },
+            // {
+            //   name: "category",
+            //   prop: "category"
+            // },
+            // {
+            //   name: "444",
+            //   prop: "name"
+            // },
+            // {
+            //   name: "555",
+            //   prop: "555"
+            // }
           ],
           /* 中间头部配置部分 */
           dimension: [],
@@ -208,9 +208,9 @@ export default {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   created() {
-    if (this.getCurrConfigs) {
+    if (this.getCurrConfigs.config) {
       //已配置则赋值
-      // this.config = this.getCurrConfigs;
+      this.config = {...this.getCurrConfigs.config};
     } else {
       //未配置则初始化
     }
@@ -229,52 +229,52 @@ export default {
     setChartData() {
       this.$set(this.config, "data", null);
       setTimeout(() => {
-        // this.$store.dispatch("getList", this);
-        let json = [
-          {
-            id: "122",
-            name: "113",
-            category: "22",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987123",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987125",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          },
-          {
-            id: "12987126",
-            name: "好滋好味鸡蛋仔",
-            category: "江浙小吃、小吃零食",
-            desc: "荷兰优质淡奶，奶香浓而不腻",
-            address: "上海市普陀区真北路",
-            shop: "王小虎夫妻店",
-            shopId: "10333"
-          }
-        ];
-        let data = this.$setData.listData(
-          this.config.chart,
-          json,
-          this.config.dataConfig.dimension,
-          this.config.dataConfig.numberValue
-        );
-        this.$set(this.config, "data", data);
+        this.$store.dispatch("getList", this);
+        //   let json = [
+        //     {
+        //       id: "122",
+        //       name: "113",
+        //       category: "22",
+        //       desc: "荷兰优质淡奶，奶香浓而不腻",
+        //       address: "上海市普陀区真北路",
+        //       shop: "王小虎夫妻店",
+        //       shopId: "10333"
+        //     },
+        //     {
+        //       id: "12987123",
+        //       name: "好滋好味鸡蛋仔",
+        //       category: "江浙小吃、小吃零食",
+        //       desc: "荷兰优质淡奶，奶香浓而不腻",
+        //       address: "上海市普陀区真北路",
+        //       shop: "王小虎夫妻店",
+        //       shopId: "10333"
+        //     },
+        //     {
+        //       id: "12987125",
+        //       name: "好滋好味鸡蛋仔",
+        //       category: "江浙小吃、小吃零食",
+        //       desc: "荷兰优质淡奶，奶香浓而不腻",
+        //       address: "上海市普陀区真北路",
+        //       shop: "王小虎夫妻店",
+        //       shopId: "10333"
+        //     },
+        //     {
+        //       id: "12987126",
+        //       name: "好滋好味鸡蛋仔",
+        //       category: "江浙小吃、小吃零食",
+        //       desc: "荷兰优质淡奶，奶香浓而不腻",
+        //       address: "上海市普陀区真北路",
+        //       shop: "王小虎夫妻店",
+        //       shopId: "10333"
+        //     }
+        //   ];
+        //   let data = this.$setData.listData(
+        //     this.config.chart,
+        //     json,
+        //     this.config.dataConfig.dimension,
+        //     this.config.dataConfig.numberValue
+        //   );
+        //   this.$set(this.config, "data", data);
       }, 100);
       this.resetChartType();
     },

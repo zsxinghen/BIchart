@@ -13,7 +13,7 @@ export default new Vuex.Store({
         accountInfo:{},//公司信息
         currRouter:1,//当前路由
         configs:null,//当前图表所有配置信息
-        currNode:{},//看板库--当前侧边栏选中节点
+        currNode:null,//看板库--当前侧边栏选中节点
         id:null,//当前图表id
     },
     actions,
