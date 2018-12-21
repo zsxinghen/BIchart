@@ -5,8 +5,17 @@
   <div class="board-center">
     <!-- 侧边栏 -->
 
-    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig"
-      @currentChange="currentChange" ref="sidebar" @boardHandler="boardHandler">
+    <sider-bar
+      title="看板库"
+      :urls="url"
+      :prop="defaultProp"
+      :currentNode="currentNode"
+      :configData="configData"
+      keyCode="layoutConfig"
+      @currentChange="currentChange"
+      ref="sidebar"
+      @boardHandler="boardHandler"
+    >
       <el-dropdown>
         <span class="el-dropdown-link">
           <i class="iconfont icon-gengduo"></i>
@@ -20,10 +29,16 @@
     <div class="board-display">
       <div class="board-display-body">
         <div v-if="currentFile.reportType=='自定义'" style="height:100%;position:relative;">
-          <div class="main-body" :style="{'background':setBg(),'background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}">
+          <div
+            class="main-body"
+            :style="{'background':setBg(),'background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}"
+          >
           </div>
           <div class="main-body">
-             <el-dropdown @command="handleCommand" placement="bottom-end">
+            <el-dropdown
+              @command="handleCommand"
+              placement="bottom-end"
+            >
               <span class="el-dropdown-link">
                 <i class="iconfont icon-shezhi"></i>
               </span>
@@ -34,33 +49,78 @@
                 <el-dropdown-item command="共享参数">共享参数</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div class="mai-header clearfix" style="padding-top:10px;">
-              <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
-              <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
+            <div
+              class="mai-header clearfix"
+              style="padding-top:10px;"
+            >
+              <div
+                class="main-title"
+                :style="setStyle('title')"
+              >{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
+              <div
+                class="sub-title"
+                :style="setStyle('subTitle')"
+              >{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
-            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"
-             @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails">
+            <super-layout
+              :config="configData"
+              ref="superLayout"
+              :isToolbar="false"
+              @handleedit="handleEdit"
+              @handlerefresh="handleRefresh"
+              @handlezoom="handleZoom"
+              @handledetails="handleDetails"
+            >
               <template slot-scope="{data}">
-                <charts-view :id="data.i" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
+                <charts-view
+                  :id="data.i"
+                  :config="data.config"
+                  v-if="data.config"
+                  :ref="'myChart'+data.i"
+                ></charts-view>
               </template>
             </super-layout>
           </div>
         </div>
-        <div v-if="currentFile.reportType=='专业模板'" style="height:100%">
-          <iframe :src="currentFile.unzipPath" frameborder="0" style="width:100%;height:100%"></iframe>
+        <div
+          v-if="currentFile.reportType=='专业模板'"
+          style="height:100%"
+        >
+          <iframe
+            :src="currentFile.unzipPath"
+            frameborder="0"
+            style="width:100%;height:100%"
+          ></iframe>
         </div>
       </div>
     </div>
     <!-- 背景设置 -->
-    <board-config-background ref="bgSet" :currentFile="currentFile" :bgconfig="bgconfig" @saveSuccess="saveSuccess"></board-config-background>
+    <board-config-background
+      ref="bgSet"
+      :currentFile="currentFile"
+      :bgconfig="bgconfig"
+      @saveSuccess="saveSuccess"
+    ></board-config-background>
     <!-- 标题设置 -->
-    <board-config-title ref="titleSet" :titleConfig="titleConfig" :currentFile="currentFile" @titleSuccess="titleSuccess"></board-config-title>
+    <board-config-title
+      ref="titleSet"
+      :titleConfig="titleConfig"
+      :currentFile="currentFile"
+      @titleSuccess="titleSuccess"
+    ></board-config-title>
     <!-- 共享参数 -->
     <board-config-param></board-config-param>
     <!-- 布局设置 -->
-    <board-config-layout ref="layoutSet" :currentFile="currentFile" @layoutSuccess="layoutSuccess"></board-config-layout>
+    <board-config-layout
+      ref="layoutSet"
+      :currentFile="currentFile"
+      @layoutSuccess="layoutSuccess"
+    ></board-config-layout>
     <!-- 放大 -->
-    <board-zoom-chart :zoomObj="zoomObj" v-if="zoomObj.isShow"></board-zoom-chart>
+    <board-zoom-chart
+      :zoomObj="zoomObj"
+      v-if="zoomObj.isShow"
+    ></board-zoom-chart>
   </div>
 </template>
 <script>
@@ -377,9 +437,9 @@ export default {
     position: absolute;
     background-size: cover !important;
     .el-dropdown {
-      position: fixed;
+      position: absolute;
       right: 20px;
-      top: 100px;
+      top: 20px;
     }
   }
 
