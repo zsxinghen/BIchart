@@ -201,10 +201,10 @@
 
   .gridtable {
     border-collapse: collapse;
-    position: absolute !important;
-    top: 0;
-    bottom: 0;
-    overflow: auto;
+    // position: absolute !important;
+    // top: 0;
+    // bottom: 0;
+    // overflow: auto;
     width: 100%;
 
     thead>tr {

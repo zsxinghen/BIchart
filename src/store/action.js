@@ -28,12 +28,12 @@ export default {
       .then(res => {
         let newArr = null;
         if (res.result) {
-
+          this_.$set(this_.config, "nowTime", res.model.nowTime);
           newArr = res.model.maps.map(val => JSON.parse(val))
-          this_.$message({
-            type: "success",
-            message: res.message
-          });
+          // this_.$message({
+          //   type: "success",
+          //   message: res.message
+          // });
         } else {
           this_.$message({
             type: "warning",

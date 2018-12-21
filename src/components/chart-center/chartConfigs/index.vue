@@ -112,11 +112,14 @@ export default {
     }
   },
   beforeMount() {
-    this.$set(
-      this.config,
-      "settings",
-      Object.assign({}, defaultConfig[`config_${this.config.chart}`])
-    );
+    if (!this.config.dataConfig.list.length) {
+      //当未配置时，初始化报表配置信息
+      this.$set(
+        this.config,
+        "settings",
+        Object.assign({}, defaultConfig[`config_${this.config.chart}`])
+      );
+    }
   },
   created() {
     this.imgType = types;

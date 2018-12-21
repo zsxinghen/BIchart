@@ -4,9 +4,9 @@
 <template>
   <div class="board-center">
     <!-- 侧边栏 -->
-    <!-- {{getCurrNode}} -->
+
     <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig"
-      @currentChange="currentChange" @boardHandler="boardHandler">
+      @currentChange="currentChange" ref="sidebar" @boardHandler="boardHandler">
       <el-dropdown>
         <span class="el-dropdown-link">
           <i class="iconfont icon-gengduo"></i>
@@ -19,9 +19,11 @@
     <!-- 布局展示 -->
     <div class="board-display">
       <div class="board-display-body">
-        <div v-if="currentFile.reportType=='自定义'">
-          <div class="board-display-header">
-            <el-dropdown @command="handleCommand">
+        <div v-if="currentFile.reportType=='自定义'" style="height:100%;position:relative;">
+          <div class="main-body" :style="{'background':setBg(),'background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}">
+          </div>
+          <div class="main-body">
+             <el-dropdown @command="handleCommand" placement="bottom-end">
               <span class="el-dropdown-link">
                 <i class="iconfont icon-shezhi"></i>
               </span>
@@ -32,15 +34,14 @@
                 <el-dropdown-item command="共享参数">共享参数</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-          </div>
-          <div class="main-body" :style="{'background':setBg(),'opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}">
             <div class="mai-header clearfix" style="padding-top:10px;">
               <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
-            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit">
+            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"
+             @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails">
               <template slot-scope="{data}">
-                <charts-view :id="data.i" :config="data.config" v-if="data.config"></charts-view>
+                <charts-view :id="data.i" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
               </template>
             </super-layout>
           </div>
@@ -58,10 +59,12 @@
     <board-config-param></board-config-param>
     <!-- 布局设置 -->
     <board-config-layout ref="layoutSet" :currentFile="currentFile" @layoutSuccess="layoutSuccess"></board-config-layout>
+    <!-- 放大 -->
+    <board-zoom-chart :zoomObj="zoomObj" v-if="zoomObj.isShow"></board-zoom-chart>
   </div>
 </template>
 <script>
-import { mapGetters ,mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 import siderBar from "../../common/sider-bar";
 import superLayout from "../../common/superLayout";
 import boardConfigTitle from "../../components/board-center/board-config-title";
@@ -69,6 +72,7 @@ import boardConfigBackground from "../../components/board-center/board-config-ba
 import boardConfigLayout from "../../components/board-center/board-config-layout";
 import boardConfigParam from "../../components/board-center/board-config-param";
 import chartsView from "../../components/chart-center/charts/index.vue";
+import boardZoomChart from "../../components/board-center/board-zoom-chart.vue";
 import { default as urls } from "../../api/urls/board-center.js";
 import { default as layoutUrls } from "../../api/urls/layout-center.js";
 
@@ -108,7 +112,12 @@ export default {
         folderId: undefined,
         alias: undefined
       },
-      url: null
+      url: null,
+      zoomObj: {
+        config: null,
+        id: "",
+        isShow: false
+      }
     };
   },
   created() {
@@ -118,6 +127,7 @@ export default {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   mounted() {
+    this.$refs.sidebar.filterData(this.getCurrNode);
     // if (this.getCurrNode) {
     //   this.$nextTick(() => {
     //     this.currentNode = this.getCurrNode;
@@ -132,7 +142,7 @@ export default {
       } else if (this.configData.bgConfig.type == "bgColor") {
         return this.configData.bgConfig.color;
       } else {
-        return "url(" + this.configData.bgConfig.imageUrl + ")";
+        return "url(" + this.configData.bgConfig.imageUrl + ") no-repeat";
       }
     },
     setStyle(type) {
@@ -230,9 +240,21 @@ export default {
      */
     handleEdit(data, index) {
       this.setCurrConfigs(data);
-      this.setCurrNode(this.currentNode);
+      this.setCurrNode(JSON.parse(JSON.stringify(this.currentNode)));
       this.setCurrchartId(data.i);
       this.$router.push("/chartCenter");
+    },
+    handleRefresh(data, index) {
+      data.config.data = null;
+      this.$refs["myChart" + data.i].getData(true);
+    },
+    handleDetails(data, index) {
+      data.boolen = true;
+    },
+    handleZoom(data, index) {
+      this.zoomObj.config = data.config;
+      this.zoomObj.i = data.i;
+      this.zoomObj.isShow = true;
     },
     boardHandler(res, data) {
       this.$set(data, "layoutConfig", res.model.layoutConfig);
@@ -304,7 +326,8 @@ export default {
     boardConfigBackground,
     boardConfigLayout,
     boardConfigParam,
-    chartsView
+    chartsView,
+    boardZoomChart
   }
 };
 </script>
@@ -312,6 +335,7 @@ export default {
 .board-center {
   display: flex;
   justify-content: space-between;
+
   .board-display {
     flex: 1;
     padding: 10px 10px 0 0;
@@ -321,14 +345,15 @@ export default {
     .board-display-body {
       width: 100%;
       background-color: white;
-      padding: 10px;
+      // padding: 10px 0;
       border-radius: 5px;
       box-shadow: 0px 2px 5px 0px rgba(24, 27, 45, 0.14);
       height: 100%;
       box-sizing: border-box;
       overflow: auto;
-      display: flex;
-      flex-direction: column;
+      // display: flex;
+      // flex-direction: column;
+      position: relative;
 
       .board-display-header {
         width: 100%;
@@ -347,7 +372,15 @@ export default {
   }
 
   .main-body {
-    flex: 1;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-size: cover !important;
+    .el-dropdown {
+      position: fixed;
+      right: 20px;
+      top: 100px;
+    }
   }
 
   .main-title {

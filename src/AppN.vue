@@ -2,9 +2,9 @@
     <router-view></router-view>
 </template>
 <script>
-import { mapMutations } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 export default {
-  props: ["boardApi", "accountName", "accountEnglist", "appLogo"],
+  props: ["boardApi", "accountName", "accountEnglist", "appLogo", "boardId"],
   data() {
     return {
       currRoute: ""
@@ -12,46 +12,38 @@ export default {
   },
   created() {
     window.localStorage.setItem("boardApi", this.boardApi);
-    this.setAccountInfo({
-      accountName: this.accountName,
-      accountEnglist: this.accountEnglist,
-      appLogo: this.appLogo
-    });
+    this.setBoardId(this.boardId);
   },
   beforeMount() {
-    this.$router.push("/chartCenterN");
+    this.$router.push("/index");
     this.currRoute = this.$route.name;
   },
   methods: {
-    ...mapMutations(["setAccountInfo"])
+    ...mapMutations(["setBoardId"])
   },
-  watch: {
-    $route(to, from) {
-      this.currRoute = to.name;
-    }
-  },
-  components: {
-    boardHearder,
-    chartHearder
-  }
+  components: {}
 };
 </script>
 
 <style lang="less">
 @import "./assets/less/reset.less";
 @import url("./assets/font/iconfont.css");
+
 .app {
   display: flex;
   flex-direction: column;
   height: 100%;
+
   .board-hearder {
     flex: 0 0 80px !important;
   }
+
   .chart-hearder {
     flex: 0 0 80px !important;
     background-color: #f0f2f3;
     box-shadow: 0px 3px 5px rgba(24, 27, 45, 0.2);
   }
+
   .router-view {
     flex: 1;
     margin-bottom: 10px;

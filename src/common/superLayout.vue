@@ -17,6 +17,7 @@
         :w="item.w" 
         :h="item.h"
         :i="item.i" 
+        :key="item.i"
         @resized ="resizedEvent"
         @moved = "movingEvent">
         <!-- 背景 -->
@@ -26,9 +27,18 @@
         </div>
         <!--工具 -->
         <div class="toolbar" v-if="!isToolbar" @mousedown.stop @mousemove.stop @click.stop> 
-          <svg class="icon" aria-hidden="true"  @click="handleClick(key,item,index)" v-for="key in tool" :key="key">
+          <el-popover
+                placement="bottom-start"
+                width="200"
+                title="备注"
+                trigger="hover"
+                v-model="item.boolen"
+            >
+            <div class="popover-word" style="word-wrap:break-word">{{item.config&&item.config.settings.remark||'无'}}</div>
+          <svg class="icon" aria-hidden="true" slot="reference"  @click="handleClick(key,item,index)" v-for="key in tool" :key="key">
             <use :xlink:href="'#icon-'+key"></use>
           </svg>
+            </el-popover>
         </div>
       </grid-item>
     </grid-layout>
@@ -40,63 +50,58 @@ import GridItem from "./grid-layout/GridItem";
 
 export default {
   props: {
-    config:{
-      require:true
+    config: {
+      require: true
     },
-    isToolbar:{
-      default:false,
+    isToolbar: {
+      default: false
     },
-    tool:{
-      default(){
-        return ['edit','refresh','details','zoom','more']
+    tool: {
+      default() {
+        return ["edit", "refresh", "details", "zoom", "more"];
       }
     }
   },
   data() {
     return {
-      isDraggable:false
+      isDraggable: false
     };
   },
-  mounted() {
-   
-  },
+  mounted() {},
   methods: {
     setDraggable(flag) {
-      if(this.config.isDraggable)
-        this.isDraggable=flag
-      else
-        this.config.isDraggable = false;
+      if (this.config.isDraggable) this.isDraggable = flag;
+      else this.config.isDraggable = false;
     },
-    resizedEvent(i, newH,newW,newHPx,newWPx){
-      this.$emit('resized',i, newH,newW,newHPx,newWPx)
+    resizedEvent(i, newH, newW, newHPx, newWPx) {
+      this.$emit("resized", i, newH, newW, newHPx, newWPx);
     },
-    movingEvent(i,newX,newY){
-      this.$emit('moved',i, newX,newY)
+    movingEvent(i, newX, newY) {
+      this.$emit("moved", i, newX, newY);
     },
     refreshLayoutItem() {
       //刷新
       this.$emit("refreshLayoutItem");
-
     },
-    handleClick(method,data,index) {
-      this.$emit('handle'+method,data,index)
+    handleClick(method, data, index) {
+      this.$emit("handle" + method, data, index);
     },
     addLine(data) {
       //添加行
       let line = this.config.line++;
-      this.createdLine({...data,line});
+      this.createdLine({ ...data, line });
     },
     createdLine(data) {
       let clearance = 0;
       let nextWidth = [];
-      let remaCol = Math.floor((100-data.all)/(data.span-data.ws.length)); 
+      let remaCol = Math.floor((100 - data.all) / (data.span - data.ws.length));
       //创建行
       for (let i = 0; i < data.span; i++) {
-        let width = data.ws[i]||remaCol;
-            nextWidth.push(width);
-            if(i>0){
-                clearance += nextWidth[i-1];
-              }
+        let width = data.ws[i] || remaCol;
+        nextWidth.push(width);
+        if (i > 0) {
+          clearance += nextWidth[i - 1];
+        }
         this.config.layout.push({
           x: clearance,
           y: data.line,
@@ -105,7 +110,7 @@ export default {
           i: "_" + (new Date().getTime() + i) + "_",
           flag: true
         });
-        console.log(this.config.layout);                
+        console.log(this.config.layout);
       }
     },
     createdLayout(id) {
@@ -128,8 +133,12 @@ export default {
 };
 </script>
 <style lang="less">
+.el-popper[x-placement^="bottom-start"] .popper__arrow {
+  left: 38.5px !important;
+}
 .superLayout {
   width: 100%;
+
   .vue-grid-item.vue-grid-placeholder {
     background-color: #000;
   }
@@ -143,13 +152,13 @@ export default {
     top: 0;
     font-size: 12px;
     white-space: nowrap;
-    svg{
+    svg {
       font-size: 14px;
-      color: #B0B1C0;
-      margin-left:5px;
+      color: #b0b1c0;
+      margin-left: 5px;
       cursor: pointer;
     }
-    .icon-size{
+    .icon-size {
       font-size: 16px;
     }
   }

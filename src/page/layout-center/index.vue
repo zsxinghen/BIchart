@@ -1,7 +1,7 @@
 <template>
   <div class="layout-center">
     <!-- 侧边栏 -->
-    <sider-bar title="布局库" :urls="url" :currentNode="currentNode" :configData="configData">
+    <sider-bar title="布局库" :urls="url" ref="sidebar" :currentNode="currentNode" :configData="configData">
       <i class="iconfont icon-gengduo" :index='3'></i>
     </sider-bar>
     <!-- 布局展示 -->
@@ -52,6 +52,9 @@ export default {
   },
   created() {
     this.url = urls;
+  },
+  mounted(){
+    this.$refs.sidebar.filterData();
   },
   methods: {
     addline(data) {

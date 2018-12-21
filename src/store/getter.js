@@ -20,5 +20,7 @@ export default {
   getCurrchartId: (state) => { //获取图表容器id
     return state.id
   },
-
+  getBoardId: (state) => { //获取当前图表的配置信息
+    return state.boardId
+  }
 }

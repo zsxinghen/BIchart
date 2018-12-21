@@ -14,7 +14,8 @@ export default new Vuex.Store({
         currRouter:1,//当前路由
         configs:null,//当前图表所有配置信息
         currNode:null,//看板库--当前侧边栏选中节点
-        id:null,//当前图表id
+        id:null,//当前图表id,
+        boardId:undefined //index.html传入的指定看板id
     },
     actions,
     mutations,

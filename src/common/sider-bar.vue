@@ -118,7 +118,7 @@ export default {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   mounted() {
-    this.filterData(this.getCurrNode);
+   
   },
   methods: {
     /*
@@ -157,7 +157,6 @@ export default {
      *获取该文件夹详情
      */
     getDesign(data) {
-      console.log(data, "------");
       this.$apis
         .fetchPost(this.urls.sideBar.search_layout, {
           params: {
@@ -167,8 +166,6 @@ export default {
         })
         .then(res => {
           if (res.result) {
-            console.log(res.model);
-
             if (this.title == "布局库") {
               this.$set(data, "config", res.model.config);
               if (res.model.config) {
@@ -192,7 +189,7 @@ export default {
             }
             // 设置节点
             this.$set(this.currentNode, "alias", res.model.alias);
-            this.$set(this.currentNode, "id", res.model.id);
+            this.$set(this.currentNode, "id", data.id);
             this.$set(this.currentNode, "folderId", res.model.folderId);
           }
         });
@@ -255,7 +252,6 @@ export default {
           }
         : {};
       this.emptyText = this.searchData ? "木有查到您需要的数据" : "暂无数据";
-
       this.$apis
         .fetchPost(this.urls.sideBar.search, {
           params: param,
@@ -265,12 +261,13 @@ export default {
           if (res.result) {
             let oldStatus = JSON.parse(JSON.stringify(this.sidbarData));
             if (node) {
-              let index = res.model.findIndex(
-                v => node.folderId == v.id
-              );
+              let index = res.model.findIndex(v => node.folderId == v.id);
               res.model[index].isOpen = true;
-              let  i=res.model[index].report.findIndex(v=>node.id=v.id);
-                this.setActiveBar(res.model[index].report[i])
+              let i = res.model[index].reports.findIndex(v => (node.id == v.id));
+              if (i != -1) {
+                console.log(i,res.model[index].reports[i])
+                this.setActiveBar(res.model[index].reports[i]);
+              }
             }
             res.model.forEach((val, i) => {
               let index = oldStatus.findIndex(v => v.id == val.id);
@@ -409,7 +406,6 @@ export default {
      * 文件夹与布局（看板） 移位保存操作
      */
     adjust(folderId, index) {
-      console.log("插入的序号：" + index);
       let param = {
         id: this.dragNode.dragData.id,
         folderId: folderId,

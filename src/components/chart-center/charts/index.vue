@@ -28,22 +28,19 @@ export default {
     this.config.data = null;
   },
   beforeMount() {
-    this.config.data = null;
-    if (this.config.dataConfig.list.length){
-      setTimeout(() => {
-        this.$store.dispatch("getList", this);
-      }, 100);
-    }
+    this.getData();
   },
-  mounted() {
-    console.log("mounted", this.config.data);
-  },
-  methods: {},
-  watch: {
-    "config.data": {
-      deep: true,
-      handler() {
-        console.log(111, this);
+  mounted() {},
+  methods: {
+    getData(boolen) {
+      this.config.data = null;
+      if (boolen) {
+        this.$forceUpdate();
+      }
+      if (this.config.dataConfig.list.length) {
+        setTimeout(() => {
+          this.$store.dispatch("getList", this);
+        }, 100);
       }
     }
   }

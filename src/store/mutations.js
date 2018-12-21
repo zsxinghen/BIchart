@@ -20,5 +20,8 @@ export default {
   setCurrchartId:(state,data)=>{//设置当前图表的配置信息
     state.id = data;
   },
+  setBoardId:(state,data)=>{//设置当前图表的配置信息
+    state.boardId = data;
+  },
 }
 

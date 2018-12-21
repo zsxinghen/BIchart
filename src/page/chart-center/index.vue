@@ -156,7 +156,8 @@ export default {
         settings: {
           chart: "table",
           type: "table",
-          title: {}
+          title: {},
+          remark: ""
         },
         dataConfig: {
           /* 弹窗数据部分 */
@@ -210,7 +211,9 @@ export default {
   created() {
     if (this.getCurrConfigs.config) {
       //已配置则赋值
-      this.config = {...this.getCurrConfigs.config};
+      this.config = JSON.parse(JSON.stringify(this.getCurrConfigs.config));
+
+      // debugger;
     } else {
       //未配置则初始化
     }
@@ -226,7 +229,7 @@ export default {
     /*
      *设置数据并刷新图表
      */
-    setChartData() {
+    setChartData(boolen) {
       this.$set(this.config, "data", null);
       setTimeout(() => {
         this.$store.dispatch("getList", this);
