@@ -4,7 +4,7 @@
     <board-hearder v-if="currRoute!=='chartCenter'"></board-hearder>
     <!-- 路由 -->
     <div class="router-view">
-       <router-view/>
+      <router-view />
     </div>
     <!-- loading -->
     <loading></loading>
@@ -34,8 +34,10 @@ export default {
     this.$router.push("/");
     this.currRoute = this.$route.name;
   },
+  mounted() {
+  },
   methods: {
-    ...mapMutations(["setAccountInfo"])
+    ...mapMutations(["setAccountInfo"]),
   },
   watch: {
     $route(to, from) {
@@ -43,7 +45,7 @@ export default {
     }
   },
   components: {
-    boardHearder,
+    boardHearder
     // chartHearder
   }
 };

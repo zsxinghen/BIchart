@@ -11,7 +11,7 @@
         <el-input-number v-model="updateSet.rate" size="mini" controls-position="right" :controls="false" :min="5" :max="86400"></el-input-number>&nbsp;&nbsp;秒
       </el-form-item>
       <el-form-item label="更新时间:" v-show="updateSet.updateWay=='timing'">
-        <el-time-picker v-model="updateSet.time" size="mini" placeholder="任意时间点">
+        <el-time-picker v-model="updateSet.time" value-format='HH:mm:ss' size="mini" placeholder="任意时间点">
         </el-time-picker>
       </el-form-item>
     </el-form>
