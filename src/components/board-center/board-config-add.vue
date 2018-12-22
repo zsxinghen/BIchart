@@ -15,7 +15,7 @@
 import customBorder from './customBorder'
 import majorBorder from './majorBorder'
 import { default as urls } from "../../api/urls/layout-center.js";
-import { default as chartUrls } from "../../api/urls/chart-center.js";
+import { default as chartUrls } from "../../api/urls/major-border.js";
 export default {
     data () {
         return {

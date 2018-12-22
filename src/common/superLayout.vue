@@ -31,7 +31,7 @@
                 placement="bottom-start"
                 width="200"
                 title="备注"
-                trigger="hover"
+                trigger="click"
                 v-model="item.boolen"
             >
             <div class="popover-word" style="word-wrap:break-word">{{item.config&&item.config.settings.remark||'无'}}</div>

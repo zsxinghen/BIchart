@@ -14,7 +14,9 @@ import loading from "./Loading";
 
 export default {
   data() {
-    return {};
+    return {
+      times: null
+    };
   },
   props: ["id", "config"],
   components: {
@@ -38,11 +40,59 @@ export default {
         this.$forceUpdate();
       }
       if (this.config.dataConfig.list.length) {
-        setTimeout(() => {
-          this.$store.dispatch("getList", this);
-        }, 100);
+        if (this.id == "my") {
+          //报表中心配置部分
+          setTimeout(() => {
+            this.$store.dispatch("getList", this);
+          }, 100);
+        } else {
+          //看板中心部分
+          if (
+            !this.config.updateSet ||
+            this.config.updateSet.updateWay == "no"
+          ) {
+            //当不设置或不更新时
+            setTimeout(() => {
+              this.$store.dispatch("getList", this);
+            }, 100);
+          } else if (this.config.updateSet.updateWay == "nomal") {
+            //  普通更新
+            if (this.config.updateSet.rate) {
+              setTimeout(() => {
+                this.$store.dispatch("getList", this);
+              }, 100);
+              this.times = setInterval(() => {
+                this.config.data = null;
+                this.$forceUpdate();
+                setTimeout(() => {
+                  this.$store.dispatch("getList", this);
+                }, 100);
+              }, this.config.updateSet.rate * 1000);
+            }
+          } else if (this.config.updateSet.updateWay == "timing") {
+            // 定时更新
+            if (this.config.updateSet.time) {
+              setTimeout(() => {
+                this.$store.dispatch("getList", this);
+              }, 100);
+              this.times = setInterval(() => {
+                let time = new Date();
+                if (time == this.config.updateSet.time) {
+                  this.config.data = null;
+                  this.$forceUpdate();
+                  setTimeout(() => {
+                    this.$store.dispatch("getList", this);
+                  }, 100);
+                }
+              }, 1000);
+            }
+          }
+        }
       }
     }
+  },
+  beforeDestroy() {
+    clearInterval(times);
   }
 };
 </script>
@@ -54,4 +104,3 @@ export default {
   overflow: hidden;
 }
 </style>
-

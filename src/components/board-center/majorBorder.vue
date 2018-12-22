@@ -1,7 +1,6 @@
 <template>
     <div class="major-border">
         <board-toast :config="customConfig" @cancel="cancel" @save="save" @handleClose="customConfig.dialogVisible=false">
-            {{form}}
             <div style="text-align:center;margin-bottom:20px;">
                  <el-form :model="form" ref="ruleForm" label-width="100px" :rules="rules">
                      <el-form-item label="看板名称" prop="name">

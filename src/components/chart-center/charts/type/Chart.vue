@@ -32,12 +32,12 @@ export default {
   mounted() {
     this.init();
     this.$root.eventHub.$on("myJJ", param => {
-      this.getData(param);
+      this.$store.dispatch("getList", this);
     });
   },
   methods: {
     init() {
-      this.chart = echarts.init(document.getElementById(this.id+'chart'));
+      this.chart = echarts.init(document.getElementById(this.id + "chart"));
       this.chart.off("click"); // 处理点击事件多次触发
       let option = $set[`${this.config.chart}`].setOption(
         this.config.settings,
@@ -48,6 +48,7 @@ export default {
       this.chart.setOption(option);
       this.resize(this.chart);
       this.chart.on("click", param => {
+        console.log(param)
         this.$root.eventHub.$emit("myDD", param.name);
       });
     },

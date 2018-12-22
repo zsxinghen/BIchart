@@ -3,8 +3,7 @@
       <div class="board-display-body">
         <div v-if="currentFile.reportType=='自定义'" style="height:100%">
           <div class="main-body" :style="{'background':setBg(),'background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}">
-          </div>
-           <div class="main-body" >  <div class="mai-header clearfix" style="padding-top:10px;">
+            <div class="mai-header clearfix" style="padding-top:10px;">
               <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
@@ -14,6 +13,7 @@
               </template>
             </super-layout>
           </div>
+           <!-- <div class="main-body" > -->
         </div>
         <div v-if="currentFile.reportType=='专业模板'" style="height:100%">
           <iframe :src="currentFile.unzipPath" frameborder="0" style="width:100%;height:100%"></iframe>
@@ -254,20 +254,22 @@ export default {
 
 .main-body {
   // flex: 1;
-  height: 100%;
+  min-height: 100%;
   width: 100%;
-  position: absolute;
+  // position: absolute;
 }
 
 .main-title {
   height: 40px;
   line-height: 40px;
   padding: 0 5px;
+  font-weight: 700;
 }
 
 .sub-title {
   height: 40px;
   line-height: 40px;
   padding: 0 5px;
+  font-weight: 700;
 }
 </style>

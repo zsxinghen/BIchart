@@ -107,9 +107,9 @@
           ></chart>
         </div>
         <div class="content footer">
-          <el-button type="text">事件配置</el-button>
-          <el-button type="text">监听参数</el-button>
-          <el-button type="text">更新配置</el-button>
+          <!-- <el-button type="text">事件配置</el-button>
+          <el-button type="text">监听参数</el-button> -->
+          <el-button type="text" @click="updateSetting">更新配置</el-button>
         </div>
       </div>
       <!-- 图表侧边栏 -->
@@ -134,12 +134,14 @@
       ></configs>
     </div>
   </div>
+  <update-setting ref="updateSetting" :config="config"></update-setting>
   </div>
 </template>
 <script>
 import chart from "../../components/chart-center/charts/index.vue";
 import configs from "../../components/chart-center/chartConfigs/index.vue";
 import dataSource from "../../components/chart-center/dataConfigs/dialog.vue";
+import updateSetting from "../../components/chart-center/dataConfigs/updateSetting.vue";
 import chartHearder from "../../common/chart-hearder.vue";
 import { types } from "../../../static/chartType.js";
 import { mapGetters } from "vuex";
@@ -203,7 +205,8 @@ export default {
     chart,
     configs,
     dataSource,
-    chartHearder
+    chartHearder,
+    updateSetting
   },
   computed: {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
@@ -340,11 +343,11 @@ export default {
         this.config.dataConfig.numberValue.splice(flag, 1);
         this.setChartData();
       }
+    },
+    updateSetting() {
+      this.$refs.updateSetting.show();
     }
   }
-  /**
-   *   监听并刷新图表
-   */
 };
 </script>
 <style lang="less">

@@ -4,41 +4,16 @@
 <template>
   <div class="board-center">
     <!-- 侧边栏 -->
-
-    <sider-bar
-      title="看板库"
-      :urls="url"
-      :prop="defaultProp"
-      :currentNode="currentNode"
-      :configData="configData"
-      keyCode="layoutConfig"
-      @currentChange="currentChange"
-      ref="sidebar"
-      @boardHandler="boardHandler"
-    >
-      <el-dropdown>
-        <span class="el-dropdown-link">
-          <i class="iconfont icon-gengduo"></i>
-        </span>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>看板授权</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+    <sider-bar title="看板库" :urls="url" :prop="defaultProp" :currentNode="currentNode" :configData="configData" keyCode="layoutConfig"
+      @currentChange="currentChange" ref="sidebar" @boardHandler="boardHandler">
+          <i class="iconfont icon-gengduo" :index='3'></i>
     </sider-bar>
     <!-- 布局展示 -->
     <div class="board-display">
       <div class="board-display-body">
         <div v-if="currentFile.reportType=='自定义'" style="height:100%;position:relative;">
-          <div
-            class="main-body"
-            :style="{'background':setBg(),'background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}"
-          >
-          </div>
-          <div class="main-body">
-            <el-dropdown
-              @command="handleCommand"
-              placement="bottom-end"
-            >
+          <div class="main-body" :style="{'background':setBg(),'height':'100%','background-size': 'cover','opacity':configData.bgConfig.opacticy?configData.bgConfig.opacticy:1}">
+            <el-dropdown @command="handleCommand" placement="bottom-end">
               <span class="el-dropdown-link">
                 <i class="iconfont icon-shezhi"></i>
               </span>
@@ -47,80 +22,37 @@
                 <el-dropdown-item command="布局设置">布局设置</el-dropdown-item>
                 <el-dropdown-item command="背景设置">背景设置</el-dropdown-item>
                 <el-dropdown-item command="共享参数">共享参数</el-dropdown-item>
+                <el-dropdown-item command="看板授权">看板授权</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div
-              class="mai-header clearfix"
-              style="padding-top:10px;"
-            >
-              <div
-                class="main-title"
-                :style="setStyle('title')"
-              >{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
-              <div
-                class="sub-title"
-                :style="setStyle('subTitle')"
-              >{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
+            <div class="mai-header clearfix" style="padding-top:10px;">
+              <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
+              <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
-            <super-layout
-              :config="configData"
-              ref="superLayout"
-              :isToolbar="false"
-              @handleedit="handleEdit"
-              @handlerefresh="handleRefresh"
-              @handlezoom="handleZoom"
-              @handledetails="handleDetails"
-            >
+            <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"
+              @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails">
               <template slot-scope="{data}">
-                <charts-view
-                  :id="data.i"
-                  :config="data.config"
-                  v-if="data.config"
-                  :ref="'myChart'+data.i"
-                ></charts-view>
+                <charts-view :id="data.i" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
               </template>
             </super-layout>
           </div>
         </div>
-        <div
-          v-if="currentFile.reportType=='专业模板'"
-          style="height:100%"
-        >
-          <iframe
-            :src="currentFile.unzipPath"
-            frameborder="0"
-            style="width:100%;height:100%"
-          ></iframe>
+        <div v-if="currentFile.reportType=='专业模板'" style="height:100%">
+          <iframe :src="currentFile.unzipPath" frameborder="0" style="width:100%;height:100%"></iframe>
         </div>
       </div>
     </div>
     <!-- 背景设置 -->
-    <board-config-background
-      ref="bgSet"
-      :currentFile="currentFile"
-      :bgconfig="bgconfig"
-      @saveSuccess="saveSuccess"
-    ></board-config-background>
+    <board-config-background ref="bgSet" :currentFile="currentFile" :bgconfig="bgconfig" @saveSuccess="saveSuccess"></board-config-background>
     <!-- 标题设置 -->
-    <board-config-title
-      ref="titleSet"
-      :titleConfig="titleConfig"
-      :currentFile="currentFile"
-      @titleSuccess="titleSuccess"
-    ></board-config-title>
+    <board-config-title ref="titleSet" :titleConfig="titleConfig" :currentFile="currentFile" @titleSuccess="titleSuccess"></board-config-title>
     <!-- 共享参数 -->
     <board-config-param></board-config-param>
     <!-- 布局设置 -->
-    <board-config-layout
-      ref="layoutSet"
-      :currentFile="currentFile"
-      @layoutSuccess="layoutSuccess"
-    ></board-config-layout>
+    <board-config-layout ref="layoutSet" :currentFile="currentFile" @layoutSuccess="layoutSuccess"></board-config-layout>
     <!-- 放大 -->
-    <board-zoom-chart
-      :zoomObj="zoomObj"
-      v-if="zoomObj.isShow"
-    ></board-zoom-chart>
+    <board-zoom-chart :zoomObj="zoomObj" v-if="zoomObj.isShow"></board-zoom-chart>
+    <board-config-authorization ref="authorization"></board-config-authorization>
   </div>
 </template>
 <script>
@@ -133,6 +65,7 @@ import boardConfigLayout from "../../components/board-center/board-config-layout
 import boardConfigParam from "../../components/board-center/board-config-param";
 import chartsView from "../../components/chart-center/charts/index.vue";
 import boardZoomChart from "../../components/board-center/board-zoom-chart.vue";
+import boardConfigAuthorization from "../../components/board-center/board-config-authorization.vue";
 import { default as urls } from "../../api/urls/board-center.js";
 import { default as layoutUrls } from "../../api/urls/layout-center.js";
 
@@ -258,25 +191,34 @@ export default {
       return str;
     },
     handleCommand(command) {
-      if (command == "背景设置") {
-        this.bgconfig = { ...this.configData.bgConfig };
-        this.$refs.bgSet.show();
-      } else if (command == "布局设置") {
-        this.$apis
-          .fetchPost(layoutUrls.sideBar.search, {
-            params: {},
-            Vue: this
-          })
-          .then(res => {
-            if (res.result) {
-              this.$refs.layoutSet.show(res.model);
-            }
-          });
-      } else if (command == "标题设置") {
-        this.titleConfig = JSON.parse(
-          JSON.stringify(this.configData.titleConfig)
-        );
-        this.$refs.titleSet.show();
+      switch (command) {
+        case "背景设置":
+          this.bgconfig = { ...this.configData.bgConfig };
+          this.$refs.bgSet.show();
+          break;
+        case "布局设置":
+          this.$apis
+            .fetchPost(layoutUrls.sideBar.search, {
+              params: {},
+              Vue: this
+            })
+            .then(res => {
+              if (res.result) {
+                this.$refs.layoutSet.show(res.model);
+              }
+            });
+          break;
+        case "标题设置":
+          this.titleConfig = JSON.parse(
+            JSON.stringify(this.configData.titleConfig)
+          );
+          this.$refs.titleSet.show();
+          break;
+        case "看板授权":
+          this.handleAuthorization();
+          break;
+        default:
+          break;
       }
     },
     currentChange(data) {
@@ -316,9 +258,18 @@ export default {
       this.zoomObj.i = data.i;
       this.zoomObj.isShow = true;
     },
+    handleAuthorization(comman) {
+      console.log(111);
+      this.$refs.authorization.show();
+    },
     boardHandler(res, data) {
       this.$set(data, "layoutConfig", res.model.layoutConfig);
       this.$set(data, "layoutId", res.model.layoutId);
+      this.$set(
+        data,
+        "datasourceLocationValueDtos",
+        res.model.datasourceLocationValueDtos
+      );
       this.configData.layout = JSON.parse(res.model.layoutConfig).layout;
       res.model.datasourceLocationValueDtos.forEach(v => {
         let flag = this.configData.layout.findIndex(k => k.i === v.reportId);
@@ -387,7 +338,8 @@ export default {
     boardConfigLayout,
     boardConfigParam,
     chartsView,
-    boardZoomChart
+    boardZoomChart,
+    boardConfigAuthorization
   }
 };
 </script>
@@ -432,10 +384,11 @@ export default {
   }
 
   .main-body {
-    height: 100%;
     width: 100%;
-    position: absolute;
+    min-height: 100%;
+    // position: absolute;
     background-size: cover !important;
+
     .el-dropdown {
       position: absolute;
       right: 20px;
@@ -447,12 +400,14 @@ export default {
     height: 40px;
     line-height: 40px;
     padding: 0 5px;
+    font-weight: 700;
   }
 
   .sub-title {
     height: 40px;
     line-height: 40px;
     padding: 0 5px;
+    font-weight: 700;
   }
 }
 </style>

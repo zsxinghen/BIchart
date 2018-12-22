@@ -9,8 +9,9 @@ export default {
       del_File: "/app_bi/report/delFolder", //删除文件夹
       search_layout: "/app_bi/report/getRe", //布局详情
       add_layout: "/app_bi/report/addRe", //新增看板
-      edit_layout: "/app_bi/report/upRe", //编辑文件夹
-      del_layout: "/app_bi/report/delRe", //删除文件夹
+      edit_layout: "/app_bi/report/upRe", //编辑看板
+      copy_layout: "/app_bi/report/copy", //复制看板
+      del_layout: "/app_bi/report/delRe", //删除看板
     }
   }
   

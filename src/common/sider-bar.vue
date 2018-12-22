@@ -117,9 +117,7 @@ export default {
   computed: {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
-  mounted() {
-   
-  },
+  mounted() {},
   methods: {
     /*
      *文件夹图标切换
@@ -263,9 +261,9 @@ export default {
             if (node) {
               let index = res.model.findIndex(v => node.folderId == v.id);
               res.model[index].isOpen = true;
-              let i = res.model[index].reports.findIndex(v => (node.id == v.id));
+              let i = res.model[index].reports.findIndex(v => node.id == v.id);
               if (i != -1) {
-                console.log(i,res.model[index].reports[i])
+                console.log(i, res.model[index].reports[i]);
                 this.setActiveBar(res.model[index].reports[i]);
               }
             }
@@ -337,37 +335,65 @@ export default {
           folderId: folderId,
           config: data.config
         };
+        this.$confirm("您正在进行复制操作，确定继续吗？")
+          .then(_ => {
+            this.$apis
+              .fetchPost(this.urls.sideBar.add_layout, {
+                params: param,
+                Vue: this
+              })
+              .then(res => {
+                if (res.result) {
+                  this.filterData();
+                  this.$message({
+                    type: "success",
+                    message: res.message
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: res.message
+                  });
+                }
+              });
+          })
+          .catch(_ => {});
       } else {
         param = {
           alias: data.alias,
           folderId: folderId,
           layoutId: data.layoutId,
-          reportType: "自定义"
+          reportType: "自定义",
+          // datasourceLocationValueDtos: data.datasourceLocationValueDtos,
+          // config: data.config,
+          id:data.id,
+          // layoutConfig: data.layoutConfig
         };
+
+        this.$confirm("您正在进行复制操作，确定继续吗？")
+          .then(_ => {
+            this.$apis
+              .fetchPost(this.urls.sideBar.copy_layout, {
+                params: param,
+                Vue: this
+              })
+              .then(res => {
+                if (res.result) {
+                  this.filterData();
+                  this.$message({
+                    type: "success",
+                    message: res.message
+                  });
+                } else {
+                  this.$message({
+                    type: "warning",
+                    message: res.message
+                  });
+                }
+              });
+          })
+          .catch(_ => {});
       }
-      this.$confirm("您正在进行复制操作，确定继续吗？")
-        .then(_ => {
-          this.$apis
-            .fetchPost(this.urls.sideBar.add_layout, {
-              params: param,
-              Vue: this
-            })
-            .then(res => {
-              if (res.result) {
-                this.filterData();
-                this.$message({
-                  type: "success",
-                  message: res.message
-                });
-              } else {
-                this.$message({
-                  type: "warning",
-                  message: res.message
-                });
-              }
-            });
-        })
-        .catch(_ => {});
     },
     /*
      * 布局中心-看板中心
