@@ -118,7 +118,9 @@ export default {
     }
   },
   beforeDestroy() {
-    clearInterval(times);
+    if (this.times) {
+      clearInterval(this.times);
+    }
   }
 };
 </script>

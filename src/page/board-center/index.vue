@@ -21,7 +21,7 @@
                 <el-dropdown-item command="标题设置">标题设置</el-dropdown-item>
                 <el-dropdown-item command="布局设置">布局设置</el-dropdown-item>
                 <el-dropdown-item command="背景设置">背景设置</el-dropdown-item>
-                <el-dropdown-item command="共享参数">共享参数</el-dropdown-item>
+                <!-- <el-dropdown-item command="图表联动">图表联动</el-dropdown-item> -->
                 <el-dropdown-item command="看板授权">看板授权</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -30,7 +30,7 @@
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
             <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"
-              @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails">
+              @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails" @handleliandong="handleLiandong" >
               <template slot-scope="{data}">
                 <charts-view :id="data.i" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
               </template>
@@ -46,8 +46,8 @@
     <board-config-background ref="bgSet" :currentFile="currentFile" :bgconfig="bgconfig" @saveSuccess="saveSuccess"></board-config-background>
     <!-- 标题设置 -->
     <board-config-title ref="titleSet" :titleConfig="titleConfig" :currentFile="currentFile" @titleSuccess="titleSuccess"></board-config-title>
-    <!-- 共享参数 -->
-    <board-config-param></board-config-param>
+    <!-- 图表联动 -->
+    <board-config-param ref="linkChart" :currentNode="currentNode"></board-config-param>
     <!-- 布局设置 -->
     <board-config-layout ref="layoutSet" :currentFile="currentFile" @layoutSuccess="layoutSuccess"></board-config-layout>
     <!-- 放大 -->
@@ -79,6 +79,7 @@ export default {
         children: "reports"
       },
       configData: {
+        // flag: false,
         layout: [],
         rowHeight: 200,
         isDraggable: true,
@@ -110,7 +111,8 @@ export default {
         config: null,
         id: "",
         isShow: false
-      }
+      },
+      linkages: null
     };
   },
   created() {
@@ -120,7 +122,7 @@ export default {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   mounted() {
-    this.$refs.sidebar.filterData(this.getCurrNode);
+    this.reGetBoard();
     // if (this.getCurrNode) {
     //   this.$nextTick(() => {
     //     this.currentNode = this.getCurrNode;
@@ -129,6 +131,10 @@ export default {
   },
   methods: {
     ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
+    // 重新获取当前看板信息
+    reGetBoard() {
+      this.$refs.sidebar.filterData(this.getCurrNode);
+    },
     setBg() {
       if (this.configData.bgConfig.type == "null") {
         return "#fff";
@@ -238,7 +244,7 @@ export default {
       this.configData.titleConfig = JSON.parse(data.config).titleConfig;
     },
     /*
-     *把当前图表信息存入vuex
+     *编辑 -- 把当前图表信息存入vuex
      */
     handleEdit(data, index) {
       this.setCurrConfigs(data);
@@ -246,6 +252,7 @@ export default {
       this.setCurrchartId(data.i);
       this.$router.push("/chartCenter");
     },
+    // 更新
     handleRefresh(data, index) {
       data.config.data = null;
       this.$refs["myChart" + data.i].getData(true);
@@ -253,24 +260,74 @@ export default {
     handleDetails(data, index) {
       data.boolen = true;
     },
+    // 放大
     handleZoom(data, index) {
       this.zoomObj.config = data.config;
       this.zoomObj.i = data.i;
       this.zoomObj.isShow = true;
     },
+    // 联动数据筛选
+    handleLiandong(data, index, config) {
+      if (data.config.type != "chart") {
+        this.$message({
+          type: "info",
+          message: "当前图表不支持联动"
+        });
+      } else {
+        let arr = config.layout
+          .map((val, idx) => {
+            if (val.config) {
+              return {
+                id: val.i,
+                toName: idx + 1 + "号图表--" + this.ChartName(val.config.chart),
+                type: val.config.type,
+                chart: val.config.chart,
+                props: [
+                  ...val.config.dataConfig.numberValue,
+                  ...val.config.dataConfig.dimension
+                ]
+              };
+            }
+          })
+          .filter(val => {
+            if (val) {
+              return val.type == "chart" && val.id !== data.i;
+            }
+          }); //初步获取被联动目标下拉列表
+        let obj = {
+          from: {
+            id: data.i,
+            type: data.config.chart,
+            props: [
+              ...data.config.dataConfig.numberValue,
+              ...data.config.dataConfig.dimension
+            ],
+            index: index,
+            name: index + 1 + "号图表--" + this.ChartName(data.config.chart)
+          },
+          toOption: arr
+        };
+        this.$refs.linkChart.show(obj, this.linkages);
+      }
+    },
     handleAuthorization(comman) {
-      console.log(111);
       this.$refs.authorization.show();
     },
-    boardHandler(res, data) {
+    boardHandler(res, data, id) {
       this.$set(data, "layoutConfig", res.model.layoutConfig);
       this.$set(data, "layoutId", res.model.layoutId);
+      this.linkages = res.model.linkages;
       this.$set(
         data,
         "datasourceLocationValueDtos",
         res.model.datasourceLocationValueDtos
       );
+      if (this.configData.flag) {
+        //当布局变动时需要保存判断
+        this.saveLayout(id, JSON.parse(JSON.stringify(this.configData)));
+      }
       this.configData.layout = JSON.parse(res.model.layoutConfig).layout;
+      this.configData.flag = false;
       res.model.datasourceLocationValueDtos.forEach(v => {
         let flag = this.configData.layout.findIndex(k => k.i === v.reportId);
         if (flag != -1) {
@@ -328,6 +385,57 @@ export default {
           subTitle: {}
         };
       }
+      // console.log(this.configData);
+    },
+    saveLayout(id, configData) {
+      // console.log(this.currentNode.id,this.configData)
+      this.$confirm("您看板布局进行了修改,需要保存吗?")
+        .then(_ => {
+          let arr = configData;
+          arr.layout.forEach(v => {
+            if (v.config) {
+              delete v.config;
+            }
+          });
+          delete arr.titleConfig;
+          delete arr.subTitleConfig;
+          let param = {
+            reportId: id,
+            layoutConfig: JSON.stringify(arr)
+          };
+          this.$apis
+            .fetchPost(urls.sideBar.upd_layout, {
+              params: param,
+              Vue: this
+            })
+            .then(res => {
+              if (res.result) {
+                // this.$message({
+                //   type: "success",
+                //   message: res.message
+                // });
+              } else {
+                this.$message({
+                  type: "warning",
+                  message: res.message
+                });
+              }
+            });
+        })
+        .catch(_ => {});
+    },
+    ChartName(key) {
+      let obj = {
+        pie: "饼图",
+        gauge: "仪表盘",
+        funnel: "漏斗图",
+        radar: "雷达图",
+        bar: "柱状图",
+        line: "折线图",
+        scatter: "散点图",
+        wordcloud: "字符云"
+      };
+      return obj[key];
     }
   },
   components: {

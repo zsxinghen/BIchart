@@ -1,3 +1,6 @@
+/* 
+ *看板授权
+ */
 <template>
   <board-toast :config="dialogConfig" @close="close" v-if="dialogConfig.dialogVisible">
     <div class="board-authorization-top">
@@ -34,49 +37,47 @@
   </board-toast>
 </template>
 <script>
-  export default {
-    data() {
-      return {
-        dialogConfig: {
-          title: "看板授权维护", //弹窗标题
-          dialogVisible: false, //弹窗显示
-          width: "800px", //弹窗宽
-          btnData: ["close"]
-        },
-        tableData: [{}]
-      };
+export default {
+  data() {
+    return {
+      dialogConfig: {
+        title: "看板授权维护", //弹窗标题
+        dialogVisible: false, //弹窗显示
+        width: "800px", //弹窗宽
+        btnData: ["close"]
+      },
+      tableData: [{}]
+    };
+  },
+  mounted() {},
+  methods: {
+    show() {
+      this.dialogConfig.dialogVisible = true;
     },
-    mounted() {},
-    methods: {
-      show() {
-        this.dialogConfig.dialogVisible = true;
-      },
-      close() {
-        this.dialogConfig.dialogVisible = false;
-      },
-      add() {},
-      remove() {}
-    }
-  };
-
+    close() {
+      this.dialogConfig.dialogVisible = false;
+    },
+    add() {},
+    remove() {}
+  }
+};
 </script>
 <style lang="less">
-  .board-authorization-top {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
+.board-authorization-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.board-authorization-main {
+  margin-bottom: 20px;
+
+  .el-table td {
+    padding: 4px 0;
   }
 
-  .board-authorization-main {
-    margin-bottom: 20px;
-
-    .el-table td {
-      padding: 4px 0;
-    }
-
-    .el-table th {
-      padding: 8px 0;
-    }
+  .el-table th {
+    padding: 8px 0;
   }
-
+}
 </style>

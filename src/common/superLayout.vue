@@ -35,7 +35,7 @@
                 v-model="item.boolen"
             >
             <div class="popover-word" style="word-wrap:break-word">{{item.config&&item.config.settings.remark||'无'}}</div>
-          <svg class="icon" aria-hidden="true" slot="reference"  @click="handleClick(key,item,index)" v-for="key in tool" :key="key">
+          <svg class="icon" aria-hidden="true" slot="reference"  @click="handleClick(key,item,index,config)" v-for="key in tool" :key="key">
             <use :xlink:href="'#icon-'+key"></use>
           </svg>
             </el-popover>
@@ -58,7 +58,7 @@ export default {
     },
     tool: {
       default() {
-        return ["edit", "refresh", "details", "zoom", "more"];
+        return ["edit", "refresh", "details", "zoom", "liandong", "more"];
       }
     }
   },
@@ -74,17 +74,19 @@ export default {
       else this.config.isDraggable = false;
     },
     resizedEvent(i, newH, newW, newHPx, newWPx) {
+      this.$set(this.config, "flag", true);
       this.$emit("resized", i, newH, newW, newHPx, newWPx);
     },
     movingEvent(i, newX, newY) {
+      this.$set(this.config, "flag", true);
       this.$emit("moved", i, newX, newY);
     },
     refreshLayoutItem() {
       //刷新
       this.$emit("refreshLayoutItem");
     },
-    handleClick(method, data, index) {
-      this.$emit("handle" + method, data, index);
+    handleClick(method, data, index,config) {
+      this.$emit("handle" + method, data, index,config);
     },
     addLine(data) {
       //添加行

@@ -12,12 +12,12 @@
         </el-radio-group>
       </el-form-item>
       <div v-if="bgconfig.type!='null'">
-        <el-form-item label="透明度:" v-show="bgconfig.type=='bgColor'">
+        <!-- <el-form-item label="透明度:" v-show="bgconfig.type=='bgColor'">
           <el-slider v-model="bgconfig.opacticy" :max="1" style="width:90%" :step="0.1">
           </el-slider>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item label="背景色:" v-show="bgconfig.type=='bgColor'">
-          <el-color-picker v-model="bgconfig.color"></el-color-picker>
+          <el-color-picker v-model="bgconfig.color" show-alpha></el-color-picker>
         </el-form-item>
         <el-form-item label="背景图:" v-show="bgconfig.type=='bgImage'">
           <el-upload class="avatar-uploader" action="http://122.225.78.66:8899/fileSystem/uploadFile" :show-file-list="false"

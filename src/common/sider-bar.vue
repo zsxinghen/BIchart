@@ -35,7 +35,7 @@
             <div class="sbl-l-item" v-for="(item,$index) in data[prop.children]" :key="item.id" :class="{'active-bar':activeBar.id===item.id}"
               @drop.prevent="dragend($event,data,item)" @dragleave.prevent="dragleave($event,data,item,$index)"
               @dragenter.prevent="dragenter($event,data,item)">
-              <div class="sbl-l-item-left" @click="setActiveBar(item)" draggable="true" @dragstart="dragstart($event,item,data)">
+              <div class="sbl-l-item-left" @click="setActiveBar(item,currentNode.id)" draggable="true" @dragstart="dragstart($event,item,data)">
                 <i class="iconfont icon-kanbanmiaoshu"></i>
                 <span :title="item.alias">{{item.alias}}</span>
               </div>
@@ -144,17 +144,17 @@ export default {
     /*
      *isActive  看板选中参数
      */
-    setActiveBar(data) {
+    setActiveBar(data,id) {
       this.$set(this.activeBar, "isActive", false);
       this.activeBar = data;
       this.$set(data, "isActive", true);
-      this.getDesign(data);
+      this.getDesign(data,id);
       this.$emit("currentChange", data);
     },
     /*
      *获取该文件夹详情
      */
-    getDesign(data) {
+    getDesign(data,id) {
       this.$apis
         .fetchPost(this.urls.sideBar.search_layout, {
           params: {
@@ -180,7 +180,7 @@ export default {
               }
             } else {
               if (data.reportType == "自定义") {
-                this.$emit("boardHandler", res, data);
+                this.$emit("boardHandler", res, data,id);
               } else {
                 this.$set(data, "unzipPath", res.model.unzipPath);
               }
@@ -263,7 +263,6 @@ export default {
               res.model[index].isOpen = true;
               let i = res.model[index].reports.findIndex(v => node.id == v.id);
               if (i != -1) {
-                console.log(i, res.model[index].reports[i]);
                 this.setActiveBar(res.model[index].reports[i]);
               }
             }
@@ -366,7 +365,7 @@ export default {
           reportType: "自定义",
           // datasourceLocationValueDtos: data.datasourceLocationValueDtos,
           // config: data.config,
-          id:data.id,
+          id: data.id
           // layoutConfig: data.layoutConfig
         };
 
@@ -493,24 +492,45 @@ export default {
     },
     // 拖拽结束
     dragend(e, parent, node) {
-      let i = this.dragNode.dragParentNode.layouts.findIndex(
-        val => val.id == this.dragNode.dragData.id
-      ); //找到旧节点
-      if (e.target.className == "sbl-item-header") {
-        if (i != -1) {
-          this.dragNode.dragParentNode.layouts.splice(i, 1); //先删除旧节点
-          this.adjust(parent.id, 1);
+      if (this.title == "布局库") {
+        let i = this.dragNode.dragParentNode.layouts.findIndex(
+          val => val.id == this.dragNode.dragData.id
+        ); //找到旧节点
+        if (e.target.className == "sbl-item-header") {
+          if (i != -1) {
+            this.dragNode.dragParentNode.layouts.splice(i, 1); //先删除旧节点
+            this.adjust(parent.id, 1);
+          }
+          parent.layouts.unshift(this.dragNode.dragData); // 插入新节点
+        } else if (e.target.className == "sbl-l-item" && node) {
+          if (i != -1) {
+            this.dragNode.dragParentNode.layouts.splice(i, 1);
+          }
+          let index = parent.layouts.findIndex(val => val.id == node.id); //先删除旧节点
+          parent.layouts.splice(index + 1, 0, this.dragNode.dragData); // 插入新节点
+          this.adjust(parent.id, index + 2);
         }
-        parent.layouts.unshift(this.dragNode.dragData); // 插入新节点
-      } else if (e.target.className == "sbl-l-item" && node) {
-        if (i != -1) {
-          this.dragNode.dragParentNode.layouts.splice(i, 1);
+        e.target.style["border-bottom"] = "1px solid #ffffff00"; //目标节点边框底色恢复
+      } else {
+        let i = this.dragNode.dragParentNode.reports.findIndex(
+          val => val.id == this.dragNode.dragData.id
+        ); //找到旧节点
+        if (e.target.className == "sbl-item-header") {
+          if (i != -1) {
+            this.dragNode.dragParentNode.reports.splice(i, 1); //先删除旧节点
+            this.adjust(parent.id, 1);
+          }
+          parent.reports.unshift(this.dragNode.dragData); // 插入新节点
+        } else if (e.target.className == "sbl-l-item" && node) {
+          if (i != -1) {
+            this.dragNode.dragParentNode.reports.splice(i, 1);
+          }
+          let index = parent.reports.findIndex(val => val.id == node.id); //先删除旧节点
+          parent.reports.splice(index + 1, 0, this.dragNode.dragData); // 插入新节点
+          this.adjust(parent.id, index + 2);
         }
-        let index = parent.layouts.findIndex(val => val.id == node.id); //先删除旧节点
-        parent.layouts.splice(index + 1, 0, this.dragNode.dragData); // 插入新节点
-        this.adjust(parent.id, index + 2);
+        e.target.style["border-bottom"] = "1px solid #ffffff00"; //目标节点边框底色恢复
       }
-      e.target.style["border-bottom"] = "1px solid #ffffff00"; //目标节点边框底色恢复
     }
   },
   components: {
