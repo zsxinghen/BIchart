@@ -2,9 +2,17 @@
 *看板中心--看板联动
 */
 <template>
-  <board-toast :config="dialogConfig" @close="close" v-if="dialogConfig.dialogVisible">
+  <board-toast
+    :config="dialogConfig"
+    @close="close"
+    v-if="dialogConfig.dialogVisible"
+  >
     <div class="board-param-top">
-      <el-form :model="formData" ref="formData" label-width="100px">
+      <el-form
+        :model="formData"
+        ref="formData"
+        label-width="100px"
+      >
         <el-row>
           <el-col :span="8">
             <el-form-item label="联动目标:">
@@ -13,16 +21,34 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="被联动目标:">
-              <el-select v-model="formData.toId" size="mini" placeholder="请选择">
-                <el-option v-for="item in setOption()" :key="item.id" :label="item.toName" :value="item.id">
+              <el-select
+                v-model="formData.toId"
+                size="mini"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in setOption()"
+                  :key="item.id"
+                  :label="item.toName"
+                  :value="item.id"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="联动参数:">
-              <el-select v-model="formData.linkParam" size="mini" placeholder="请选择">
-                <el-option v-for="item in option" :key="item.prop" :label="item.label" :value="item.prop">
+              <el-select
+                v-model="formData.linkParam"
+                size="mini"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="item in option"
+                  :key="item.prop"
+                  :label="item.label"
+                  :value="item.prop"
+                >
                 </el-option>
               </el-select>
             </el-form-item>
@@ -30,23 +56,69 @@
         </el-row>
       </el-form>
     </div>
-      <div style="position:relative;height: 40px;">
-        <div style="position:absolute;top:0;right:0">
-        <el-button type="primary" size="mini" v-show="type=='add'" @click.stop="add">新增</el-button>
-        <el-button size="mini" v-show="type=='add'" @click.stop="empty">清空</el-button>
-        <el-button size="mini" v-show="type=='edit'" @click.stop="save">保存</el-button>
-        </div>
+    <div style="position:relative;height: 40px;">
+      <div style="position:absolute;top:0;right:0">
+        <el-button
+          type="primary"
+          size="mini"
+          v-show="type=='add'"
+          @click.stop="add"
+        >新增</el-button>
+        <el-button
+          size="mini"
+          v-show="type=='add'"
+          @click.stop="empty"
+        >清空</el-button>
+        <el-button
+          size="mini"
+          v-show="type=='edit'"
+          @click.stop="save"
+        >保存</el-button>
       </div>
+    </div>
     <div class="board-param-main">
-      <el-table :data="tableData" stripe border max-height="500" style="width: 100%" @row-click="rowClick">
-        <el-table-column prop="fromName" label="联动目标" width="180" header-align="center" align="center">
+      <el-table
+        :data="tableData"
+        stripe
+        border
+        max-height="500"
+        style="width: 100%"
+        @row-click="rowClick"
+      >
+        <el-table-column
+          prop="fromName"
+          label="联动目标"
+          width="180"
+          header-align="center"
+          align="center"
+        >
         </el-table-column>
-        <el-table-column prop="toName" label="被联动目标" width="180" header-align="center" align="center">
+        <el-table-column
+          prop="toName"
+          label="被联动目标"
+          width="180"
+          header-align="center"
+          align="center"
+        >
         </el-table-column>
-        <el-table-column prop="linkParam" label="联动参数" header-align="center" align="center"></el-table-column>
-        <el-table-column label="操作" width="100" header-align="center" align="center">
+        <el-table-column
+          prop="linkParam"
+          label="联动参数"
+          header-align="center"
+          align="center"
+        ></el-table-column>
+        <el-table-column
+          label="操作"
+          width="100"
+          header-align="center"
+          align="center"
+        >
           <template slot-scope="scope">
-            <el-button @click="del(scope.row)" type="text" size="small">删除</el-button>
+            <el-button
+              @click="del(scope.row)"
+              type="text"
+              size="small"
+            >删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -84,8 +156,7 @@ export default {
     "dialogConfig.dialogVisible": {
       handler() {
         if (!this.dialogConfig.dialogVisible) {
-          console.log(this);
-          this.$parent.reGetBoard();
+          this.$parent.reGetBoard(this.currentNode, this.currentNode.id);
         }
       }
     }

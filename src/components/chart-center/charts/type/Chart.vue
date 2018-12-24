@@ -1,5 +1,8 @@
 <template>
-      <div :id='id+"chart"' class="my-bi-chart"></div>
+  <div
+    :id='id+"chart"'
+    class="my-bi-chart"
+  ></div>
 </template>
 <script>
 // import echarts from "echarts";
@@ -27,13 +30,24 @@ export default {
       default: () => {
         return {};
       }
+    },
+    linkages: {
+      required: true,
+      type: Object,
+      default: () => {
+        return {};
+      }
     }
   },
   mounted() {
     this.init();
-    this.$root.eventHub.$on("myJJ", param => {
-      this.$store.dispatch("getList", this);
-    });
+    if (this.linkages) {
+      let arr = this.linkages.filter(v => v.toId == this.id); //筛选所有指向本图表的联动数据
+      for (let i = 0; i < arr.length; i++)
+        this.$root.eventHub.$on(arr[i].fromId, param => {
+          this.$store.dispatch("getList", this, param);
+        });
+    }
   },
   methods: {
     init() {
@@ -48,8 +62,12 @@ export default {
       this.chart.setOption(option);
       this.resize(this.chart);
       this.chart.on("click", param => {
-        console.log(param)
-        this.$root.eventHub.$emit("myDD", param.name);
+        if (this.linkages) {
+          let arr = this.linkages.filter(v => v.fromId == this.id); //筛选从本图表出去的联动数据
+          for (let i = 0; i < arr.length; i++)
+            this.$root.eventHub.$emit(arr[i].toId, arr[i].linkParam);
+        }
+        // this.$root.eventHub.$emit("myDD", param.name);
       });
     },
     //图表自适应容器宽高

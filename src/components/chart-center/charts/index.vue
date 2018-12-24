@@ -4,6 +4,7 @@
       :is="`my-${config.type}`"
       :config="config"
       :id="id"
+      :linkages="linkages"
       v-if="config.data"
     >
     </component>
@@ -22,7 +23,7 @@ export default {
       times: null
     };
   },
-  props: ["id", "config"],
+  props: ["id", "config","linkages"],
   components: {
     myCard,
     myMap,

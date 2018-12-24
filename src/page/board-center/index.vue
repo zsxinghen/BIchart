@@ -32,7 +32,7 @@
             <super-layout :config="configData" ref="superLayout" :isToolbar="false" @handleedit="handleEdit"
               @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails" @handleliandong="handleLiandong" >
               <template slot-scope="{data}">
-                <charts-view :id="data.i" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
+                <charts-view :id="data.i" :linkages="linkages"  :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
               </template>
             </super-layout>
           </div>
@@ -122,7 +122,7 @@ export default {
     ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
   },
   mounted() {
-    this.reGetBoard();
+    this.$refs.sidebar.filterData(this.getCurrNode);
     // if (this.getCurrNode) {
     //   this.$nextTick(() => {
     //     this.currentNode = this.getCurrNode;
@@ -132,8 +132,8 @@ export default {
   methods: {
     ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
     // 重新获取当前看板信息
-    reGetBoard() {
-      this.$refs.sidebar.filterData(this.getCurrNode);
+    reGetBoard(data,id) {
+       this.$refs.sidebar.getDesign(data,id)
     },
     setBg() {
       if (this.configData.bgConfig.type == "null") {
