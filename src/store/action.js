@@ -12,7 +12,7 @@ export default {
    */
   getList: ({
     commit
-  }, this_, linkData) => {
+  }, this_,) => {
     let arr = this_.config.dataConfig.dimension
       .concat(this_.config.dataConfig.numberValue)
       .map(val => val.prop); //去合并维度、数值组合数组
@@ -20,9 +20,10 @@ export default {
       id: this_.config.dataConfig.id,
       keyls: Array.from(new Set([...arr])) //去重
     };
-    if (linkData) {
-      param.linkData = linkData;
+    if (this_.key) {
+      param.values = JSON.stringify(this_.key);
     }
+ 
     this_.$apis
       .fetchPostJson(urls.getListUrl, {
         params: param,

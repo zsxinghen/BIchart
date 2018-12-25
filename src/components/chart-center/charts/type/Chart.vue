@@ -7,6 +7,7 @@
 <script>
 // import echarts from "echarts";
 import { default as $set } from "../../../../packages/index";
+import { default as $linkSet } from "../../../../../static/link.js";
 import { setTimeout } from "timers";
 var echarts = require("echarts");
 require("echarts-wordcloud");
@@ -14,7 +15,8 @@ require("echarts-liquidfill");
 export default {
   data() {
     return {
-      chart: null
+      chart: null,
+      key: null
     };
   },
   props: {
@@ -33,9 +35,9 @@ export default {
     },
     linkages: {
       required: true,
-      type: Object,
+      type: Array,
       default: () => {
-        return {};
+        return [];
       }
     }
   },
@@ -43,10 +45,15 @@ export default {
     this.init();
     if (this.linkages) {
       let arr = this.linkages.filter(v => v.toId == this.id); //筛选所有指向本图表的联动数据
-      for (let i = 0; i < arr.length; i++)
-        this.$root.eventHub.$on(arr[i].fromId, param => {
-          this.$store.dispatch("getList", this, param);
+      if (arr.length) {
+        // for (let i = 0; i < arr.length; i++) {
+        this.$root.eventHub.$on(this.id, param => {
+          // console.log("接收", this.id);
+          // console.log(this.config.chart,this.id);
+          this.$parent.update(param);
         });
+        // }
+      }
     }
   },
   methods: {
@@ -62,10 +69,27 @@ export default {
       this.chart.setOption(option);
       this.resize(this.chart);
       this.chart.on("click", param => {
+        console.log(1);
+        let obj = Object.create(null);
         if (this.linkages) {
           let arr = this.linkages.filter(v => v.fromId == this.id); //筛选从本图表出去的联动数据
-          for (let i = 0; i < arr.length; i++)
-            this.$root.eventHub.$emit(arr[i].toId, arr[i].linkParam);
+          for (let i = 0; i < arr.length; i++) {
+            // let obj = $linkSet.linkParam(arr[i].linkParam, this.config);//复杂版---从外部筛选参数，比较复杂，先不做
+            console.log(param);
+            if (
+              this.config.chart == "line" ||
+              this.config.chart == "bar" ||
+              this.config.chart == "scatter"
+            ) {
+              obj[arr[i].linkParam] = param.data.x;
+            } else {
+              obj[arr[i].linkParam] = param.name;
+            }
+            //简化版---根据name来获取参数
+            // console.log("发出", arr[i].fromId);
+            //   console.log("id", this.id);
+            this.$root.eventHub.$emit(arr[i].toId, obj);
+          }
         }
         // this.$root.eventHub.$emit("myDD", param.name);
       });
@@ -79,7 +103,6 @@ export default {
 
       $("#effect" + this.id + " > .vue-resizable-handle")
         .mousedown(function() {
-          console.log(1111);
           time = setInterval(function() {
             chart.resize();
           }, 100);
@@ -114,7 +137,6 @@ export default {
               this.config.settings,
               this.config.data
             );
-
             this.chart.setOption(option);
           }
         }

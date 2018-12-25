@@ -133,7 +133,7 @@ export default {
     ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
     // 重新获取当前看板信息
     reGetBoard(data,id) {
-       this.$refs.sidebar.getDesign(data,id)
+       this.$refs.sidebar.getDesign({...data,reportType:"自定义"},id)
     },
     setBg() {
       if (this.configData.bgConfig.type == "null") {
@@ -317,6 +317,7 @@ export default {
       this.$set(data, "layoutConfig", res.model.layoutConfig);
       this.$set(data, "layoutId", res.model.layoutId);
       this.linkages = res.model.linkages;
+      console.log(this.linkages)
       this.$set(
         data,
         "datasourceLocationValueDtos",

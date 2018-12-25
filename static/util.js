@@ -2,42 +2,44 @@
 export default {
   listData(type, tableData, dimension, numberValue) {
     let data = null;
-    switch (type) {
-      case 'table':
-        data = this.setTableData(tableData, dimension, numberValue);
-        break;
-      case 'card':
-        data = this.setCardData(tableData, dimension, numberValue);
-        break;
-      case 'gauge':
-        data = this.setCardData(tableData, dimension, numberValue);
-        break;
-      case 'pie':
-        data = this.setPieData(tableData, dimension, numberValue);
-        break;
-        // case 'sunburst':
-        //   data = this.setSunburstData(tableData, dimension, numberValue);
-        //   break;
-      case 'funnel':
-        data = this.setPieData(tableData, dimension, numberValue);
-        break;
-      case 'radar':
-        data = this.setRadarData(tableData, dimension, numberValue);
-        break;
-      case 'line':
-        data = this.setLineData(tableData, dimension, numberValue);
-        break;
-      case 'scatter':
-        data = this.setLineData(tableData, dimension, numberValue);
-        break;
-      case 'bar':
-        data = this.setLineData(tableData, dimension, numberValue);
-        break;
-      case 'wordcloud':
-        data = this.setWordcloudData(tableData, dimension, numberValue);
-        break;
-      default:
-        break;
+    if (tableData.length) {
+      switch (type) {
+        case 'table':
+          data = this.setTableData(tableData, dimension, numberValue);
+          break;
+        case 'card':
+          data = this.setCardData(tableData, dimension, numberValue);
+          break;
+        case 'gauge':
+          data = this.setCardData(tableData, dimension, numberValue);
+          break;
+        case 'pie':
+          data = this.setPieData(tableData, dimension, numberValue);
+          break;
+          // case 'sunburst':
+          //   data = this.setSunburstData(tableData, dimension, numberValue);
+          //   break;
+        case 'funnel':
+          data = this.setPieData(tableData, dimension, numberValue);
+          break;
+        case 'radar':
+          data = this.setRadarData(tableData, dimension, numberValue);
+          break;
+        case 'line':
+          data = this.setLineData(tableData, dimension, numberValue);
+          break;
+        case 'scatter':
+          data = this.setLineData(tableData, dimension, numberValue);
+          break;
+        case 'bar':
+          data = this.setLineData(tableData, dimension, numberValue);
+          break;
+        case 'wordcloud':
+          data = this.setWordcloudData(tableData, dimension, numberValue);
+          break;
+        default:
+          break;
+      }
     }
     return data
   },

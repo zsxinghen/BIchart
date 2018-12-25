@@ -25,6 +25,7 @@
                 v-model="formData.toId"
                 size="mini"
                 placeholder="请选择"
+                @change="setParamOption(formData.toId)"
               >
                 <el-option
                   v-for="item in setOption()"
@@ -67,7 +68,7 @@
         <el-button
           size="mini"
           v-show="type=='add'"
-          @click.stop="empty"
+          @click.stop="empty()"
         >清空</el-button>
         <el-button
           size="mini"
@@ -83,7 +84,7 @@
         border
         max-height="500"
         style="width: 100%"
-        @row-click="rowClick"
+        @row-dblclick="rowClick"
       >
         <el-table-column
           prop="fromName"
@@ -142,7 +143,10 @@ export default {
       // tableData: [{}],
       type: "add",
       tableData: [],
-      formData: {}
+      formData: {
+        toId: "",
+        linkParam: ""
+      }
     };
   },
   props: {
@@ -166,13 +170,16 @@ export default {
       this.formData.fromId = obj.from.id;
       this.formData.fromName = obj.from.name;
       this.option = obj.from.props;
+
       this.boardChart = obj.toOption;
       this.dialogConfig.dialogVisible = true;
       this.tableData = arr.filter(v => v.fromId == obj.from.id);
+      this.empty();
     },
     close() {
       this.dialogConfig.dialogVisible = false;
     },
+    // 筛选被联动目标
     setOption() {
       let arr = this.boardChart.filter(v => {
         let flag = this.tableData.findIndex(k => v.id == k.toId);
@@ -183,6 +190,15 @@ export default {
         }
       });
       return arr;
+    },
+    //根据被联动目标情况获取被联动参数
+    setParamOption(id) {
+      let flag = this.boardChart.findIndex(v => v.id == id);
+      if (flag != -1) {
+        this.option = this.boardChart[flag].props;
+      } else {
+        this.option = [];
+      }
     },
     // 删除
     del(row) {
@@ -240,8 +256,10 @@ export default {
         });
     },
     empty() {
-      this.formData.toId = null;
-      this.formData.linkParam = null;
+      this.formData.toId = "";
+      this.formData.linkParam = "";
+      this.$forceUpdate();
+      this.option = [];
     },
     // 编辑部分
     rowClick(row) {

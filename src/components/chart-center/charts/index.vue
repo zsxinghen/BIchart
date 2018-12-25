@@ -20,10 +20,11 @@ import loading from "./Loading";
 export default {
   data() {
     return {
-      times: null
+      times: null,
+      key: null
     };
   },
-  props: ["id", "config","linkages"],
+  props: ["id", "config", "linkages"],
   components: {
     myCard,
     myMap,
@@ -42,6 +43,7 @@ export default {
     getData(boolen) {
       this.config.data = null;
       if (boolen) {
+        this.key=null;
         this.$forceUpdate();
       }
       if (this.config.dataConfig.list.length) {
@@ -79,7 +81,11 @@ export default {
         }
       }
     },
-    update() {
+    update(param) {
+      if (param) {
+        this.key = param;
+      }
+
       this.config.data = null;
       this.$forceUpdate();
       setTimeout(() => {
