@@ -24,10 +24,10 @@
               <i :class="setFileIcon(data)"></i>
               <span>{{data.alias}}</span>
             </div>
-            <div class="sbl-l-item-right" v-show="openIndex==index&&data.isOpen" @click="operation($event,data,data,'file',data.id)">
+            <div class="sbl-l-item-right"  v-show="openIndex==index&&data.isOpen" @click="operation($event,data,data,'file',data.id)">
               <i class="iconfont icon-xinzeng"></i>
-              <i class="iconfont icon-bianji"></i>
-              <i class="iconfont icon-shanchu"></i>
+              <i class="iconfont icon-bianji" v-if="!data.isFileDesign"></i>
+              <i class="iconfont icon-shanchu" v-if="!data.isFileDesign"></i>
             </div>
           </div>
           <!-- 看板 -->
@@ -39,7 +39,7 @@
                 <i class="iconfont icon-kanbanmiaoshu"></i>
                 <span :title="item.alias">{{item.alias}}</span>
               </div>
-              <div class="sbl-l-item-right" v-show="item.isActive" @click="operation($event,data.layouts,item,'',data.id)">
+              <div class="sbl-l-item-right" v-if="!item.isboardDesign" v-show="item.isActive" @click="operation($event,data.layouts,item,'',data.id)">
                 <i class="iconfont icon-bianji"></i>
                 <i class="iconfont icon-fuzhi"></i>
                 <i class="iconfont icon-shanchu"></i>
@@ -144,17 +144,17 @@ export default {
     /*
      *isActive  看板选中参数
      */
-    setActiveBar(data,id) {
+    setActiveBar(data, id) {
       this.$set(this.activeBar, "isActive", false);
       this.activeBar = data;
       this.$set(data, "isActive", true);
-      this.getDesign(data,id);
+      this.getDesign(data, id);
       this.$emit("currentChange", data);
     },
     /*
      *获取该文件夹详情
      */
-    getDesign(data,id) {
+    getDesign(data, id) {
       this.$apis
         .fetchPost(this.urls.sideBar.search_layout, {
           params: {
@@ -180,7 +180,7 @@ export default {
               }
             } else {
               if (data.reportType == "自定义") {
-                this.$emit("boardHandler", res, data,id);
+                this.$emit("boardHandler", res, data, id);
               } else {
                 this.$set(data, "unzipPath", res.model.unzipPath);
               }
@@ -270,6 +270,19 @@ export default {
               let index = oldStatus.findIndex(v => v.id == val.id);
               if (index != -1) {
                 res.model[i].isOpen = oldStatus[index].isOpen;
+              }
+              if (this.title == "看板库") {
+                res.model.forEach((val, i) => {
+                  let flag = val.reports.findIndex(v => v.isDesisn == 0);
+                  if (flag != -1) {
+                    res.model[i].isFileDesign = true; //当文件夹下有看板不能编辑时，隐藏工具栏
+                  }
+                  val.reports.forEach((k, j) => {
+                    if (k.isDesisn == 0) {
+                      val.reports[j].isboardDesign = true; //当看板只能查看时，隐藏工具栏
+                    }
+                  });
+                });
               }
             }); //设置文件夹查询之前开关状态
             this.sidbarData = res.model;

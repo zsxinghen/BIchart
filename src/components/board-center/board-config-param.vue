@@ -11,6 +11,7 @@
       <el-form
         :model="formData"
         ref="formData"
+        :rules="rules" 
         label-width="100px"
       >
         <el-row>
@@ -20,7 +21,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="被联动目标:">
+            <el-form-item label="被联动目标:" prop="toId">
               <el-select
                 v-model="formData.toId"
                 size="mini"
@@ -38,7 +39,7 @@
             </el-form-item>
           </el-col>
           <el-col :span="8">
-            <el-form-item label="联动参数:">
+            <el-form-item label="联动参数:" prop="linkParam">
               <el-select
                 v-model="formData.linkParam"
                 size="mini"
@@ -63,7 +64,7 @@
           type="primary"
           size="mini"
           v-show="type=='add'"
-          @click.stop="add"
+          @click.stop="check(add)"
         >新增</el-button>
         <el-button
           size="mini"
@@ -73,7 +74,7 @@
         <el-button
           size="mini"
           v-show="type=='edit'"
-          @click.stop="save"
+          @click.stop="check(save)"
         >保存</el-button>
       </div>
     </div>
@@ -146,6 +147,14 @@ export default {
       formData: {
         toId: "",
         linkParam: ""
+      },
+      rules: {
+        toId: [
+          { required: true, message: "请选择被联动目标", trigger: "change" }
+        ],
+        linkParam: [
+          { required: true, message: "请选择联动参数", trigger: "change" }
+        ]
       }
     };
   },
@@ -200,6 +209,16 @@ export default {
         this.option = [];
       }
     },
+    check(done) {
+      this.$refs["formData"].validate(valid => {
+        if (valid) {
+          done();
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
     // 删除
     del(row) {
       this.$apis
@@ -223,6 +242,7 @@ export default {
           }
         });
     },
+
     // 新增部分
     add() {
       let flag = this.boardChart.findIndex(k => k.id == this.formData.toId);
@@ -260,6 +280,9 @@ export default {
       this.formData.linkParam = "";
       this.$forceUpdate();
       this.option = [];
+      if (this.$refs["formData"]) {
+        this.$refs["formData"].resetFields();
+      }
     },
     // 编辑部分
     rowClick(row) {
@@ -320,7 +343,7 @@ export default {
   justify-content: space-between;
   margin-bottom: 10px;
   .el-form-item {
-    margin-bottom: 0px;
+    margin-bottom: 8px;
   }
 }
 

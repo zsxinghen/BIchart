@@ -15,6 +15,12 @@ export default {
     upd_layout: "/app_bi/repConfig/upd", //修改看板布局
     add_Link: "/app_bi/link/add", //新增联动
     up_Link: "/app_bi/link/upd", //编辑联动
-    del_Link: "/app_bi/link/del" //删除联动
+    del_Link: "/app_bi/link/del", //删除联动
+
+    getEmp_grant:"/app_bi/grant/getEmp",//人员下拉查询
+    add_grant:"/app_bi/grant/add", //新增人员授权
+    get_grant:"/app_bi/grant/get",//获取人员授权列表
+    upd_grant:"/app_bi/grant/upd",//编辑人员授权
+    del_grant:"/app_bi/grant/del",//删除人员授权
   }
 }

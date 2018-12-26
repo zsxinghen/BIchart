@@ -46,13 +46,9 @@ export default {
     if (this.linkages) {
       let arr = this.linkages.filter(v => v.toId == this.id); //筛选所有指向本图表的联动数据
       if (arr.length) {
-        // for (let i = 0; i < arr.length; i++) {
         this.$root.eventHub.$on(this.id, param => {
-          // console.log("接收", this.id);
-          // console.log(this.config.chart,this.id);
           this.$parent.update(param);
         });
-        // }
       }
     }
   },
@@ -69,7 +65,6 @@ export default {
       this.chart.setOption(option);
       this.resize(this.chart);
       this.chart.on("click", param => {
-        console.log(1);
         let obj = Object.create(null);
         if (this.linkages) {
           let arr = this.linkages.filter(v => v.fromId == this.id); //筛选从本图表出去的联动数据
@@ -86,12 +81,9 @@ export default {
               obj[arr[i].linkParam] = param.name;
             }
             //简化版---根据name来获取参数
-            // console.log("发出", arr[i].fromId);
-            //   console.log("id", this.id);
             this.$root.eventHub.$emit(arr[i].toId, obj);
           }
         }
-        // this.$root.eventHub.$emit("myDD", param.name);
       });
     },
     //图表自适应容器宽高
