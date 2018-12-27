@@ -4,6 +4,7 @@
 <template>
     <board-toast :config="dialogConfig" @cancel="close" @save="save" class="data-rule-config">
           <!-- 设置筛选 -->
+          
           <!-- 过滤规则显示 -->
           <ul>
               <li v-for="(item,index) in ruleForm.findCond" :key='index'>{{item}}</li>
@@ -21,7 +22,7 @@ export default {
         btnData: ["cancel", "save"],
         appendToBody: true
       },
-      
+       
     };
   },
   props: {

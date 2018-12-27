@@ -31,14 +31,14 @@
       <el-form-item label="数据列：" label-width="100px" prop="sourceType">
         <el-popover placement="top" trigger="click">
           <ul>
-            <li v-for="(item,index) in options.list" :key="item.id" style="padding-left:20px">
+            <li v-for="(item) in options.list" :key="item.id" style="padding-left:20px">
               <el-checkbox v-model="item.isCheck" :label="item.alias">{{item.remark}}</el-checkbox>
             </li>
           </ul>
           <el-button type="primary" slot="reference" size="mini">数据列配置</el-button>
         </el-popover>
         <p>
-          <el-tag v-for="(item,index) in options.list" v-show="item.isCheck" style="margin-right:10px">{{item.remark}}</el-tag>
+          <el-tag v-for="(item,index) in options.list" :key="index" v-show="item.isCheck" style="margin-right:10px">{{item.remark}}</el-tag>
         </p>
       </el-form-item>
     </el-col>

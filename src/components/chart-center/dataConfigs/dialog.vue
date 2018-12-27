@@ -2,26 +2,65 @@
 本地数据源配置弹窗部分
 */
 <template>
-  <board-toast :config="dialogConfig" @cancel="close" @save="save" class="data-set-config">
-    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm" style="margin-right:30px;margin-bottom:10px">
+  <board-toast
+    :config="dialogConfig"
+    @cancel="close"
+    @save="save"
+    class="data-set-config"
+  >
+    <el-form
+      :model="ruleForm"
+      :rules="rules"
+      ref="ruleForm"
+      class="demo-ruleForm"
+      style="margin-right:30px;margin-bottom:10px"
+    >
       <el-row :gutter="24">
         <el-col :span="12">
-          <el-form-item label="数据源：" label-width="100px" prop="sourceType">
-            <el-radio v-model="ruleForm.sourceType" label="local"  @change="resetData">本地</el-radio>
-            <el-radio v-model="ruleForm.sourceType" label="remote" @change="resetData">远程</el-radio>
+          <el-form-item
+            label="数据源："
+            label-width="100px"
+            prop="sourceType"
+          >
+            <el-radio
+              v-model="ruleForm.sourceType"
+              label="local"
+              @change="resetData"
+            >本地</el-radio>
+            <el-radio
+              v-model="ruleForm.sourceType"
+              label="remote"
+              @change="resetData"
+            >远程</el-radio>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="数据集名称：" label-width="100px" prop="tableName">
-            <el-input v-model="ruleForm.tableName" placeholder="数据集名称" size="mini"></el-input>
+          <el-form-item
+            label="数据集名称："
+            label-width="100px"
+            prop="tableName"
+          >
+            <el-input
+              v-model="ruleForm.tableName"
+              placeholder="数据集名称"
+              size="mini"
+            ></el-input>
           </el-form-item>
         </el-col>
         <keep-alive>
           <div v-if="ruleForm.sourceType=='local'">
             <el-col :span="24">
-              <el-form-item label="" label-width="30px" prop="domain">
-                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入本地数据源，以json格式输入"
-                  v-model="ruleForm.domain">
+              <el-form-item
+                label=""
+                label-width="30px"
+                prop="domain"
+              >
+                <el-input
+                  type="textarea"
+                  :autosize="{ minRows: 2, maxRows: 4}"
+                  placeholder="请输入本地数据源，以json格式输入"
+                  v-model="ruleForm.domain"
+                >
                 </el-input>
               </el-form-item>
             </el-col>
@@ -30,7 +69,12 @@
         <keep-alive>
           <!-- 远程数据源 -->
           <div v-if="ruleForm.sourceType=='remote'">
-            <remote-data :dataConfig="config.dataConfig" ref="remoteData"  :ruleForm="ruleForm" :config="config"></remote-data>
+            <remote-data
+              :dataConfig="config.dataConfig"
+              ref="remoteData"
+              :ruleForm="ruleForm"
+              :config="config"
+            ></remote-data>
           </div>
         </keep-alive>
       </el-row>
@@ -118,8 +162,7 @@ export default {
     "dialogConfig.dialogVisible"() {
       if (this.isSave) {
         let obj = JSON.parse(JSON.stringify(this.config));
-        //初始化数据
-
+        //当维度、数值变化时，初始化所有配置信息
         this.$set(this.config, "chart", "table");
         this.$set(this.config, "type", "table");
         this.$set(this.config, "settings", {
@@ -217,7 +260,9 @@ export default {
                   });
                 });
                 // 判断维度、数值字段是否变化，只要变化一个全部初始化
-                this.isSave = true;
+                this.isSave = this.checkChange([
+                  ...this.config.dataConfig.list
+                ]);
                 this.close();
 
                 this.$message({
@@ -283,7 +328,7 @@ export default {
               });
             this.config.dataConfig.list = list;
             // 判断维度、数值字段是否变化，只要变化一个全部初始化
-            this.isSave = true;
+            this.isSave = this.checkChange([...this.config.dataConfig.list]);
             this.close();
             this.$message({
               type: "success",
@@ -296,6 +341,31 @@ export default {
             });
           }
         });
+    },
+    // 确认维度、数值是否变化
+    checkChange(list) {
+      let dimension = [...this.config.dataConfig.dimension],
+        numberValue = [...this.config.dataConfig.numberValue],
+        flag = false;
+      // 当list的没有dimension或numberValue中任何一个元素，返回ture;
+      if (dimension.length > 0) {
+        dimension.forEach(v => {
+          let i = list.findIndex(k => k.prop == v.prop);
+          if (i == -1) {
+            flag = true;
+          }
+        });
+      }
+      if (numberValue.length > 0) {
+        numberValue.forEach(v => {
+          let i = list.findIndex(k => k.prop == v.prop);
+          if (i == -1) {
+            flag = true;
+          }
+        });
+      }
+
+      return flag;
     }
   }
 };
