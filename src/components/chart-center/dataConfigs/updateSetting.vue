@@ -1,3 +1,4 @@
+// 更新方式
 <template>
   <board-toast :config="dialogConfig" @cancel="close" @save="save" class="update-setting">
     <el-form :model="updateSet" style="padding-left:100px;margin-bottom:20px">
@@ -32,7 +33,7 @@ export default {
       }
     };
   },
-  props:['config'],
+  props: ["config"],
   methods: {
     show() {
       // 初始化数据

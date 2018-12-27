@@ -58,7 +58,7 @@ export default {
     },
     tool: {
       default() {
-        return ["details","edit", "refresh", "zoom", "liandong", "more"];
+        return ["edit", "refresh", "details","zoom", "liandong", "more"];
       }
     }
   },

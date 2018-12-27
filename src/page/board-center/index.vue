@@ -24,7 +24,7 @@
                 <el-dropdown-item v-show="isAdmin" command="看板授权">看板授权</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <div class="mai-header clearfix" style="padding-top:10px;min-height:30px">
+            <div class="mai-header clearfix" style="padding-top:10px;min-height:80px">
               <div class="main-title" :style="setStyle('title')">{{configData.titleConfig.title.text?configData.titleConfig.title.text:''}}</div>
               <div class="sub-title" :style="setStyle('subTitle')">{{configData.titleConfig.subTitle.text?configData.titleConfig.subTitle.text:''}}</div>
             </div>
