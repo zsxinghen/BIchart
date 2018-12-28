@@ -30,6 +30,9 @@ export const data_pie = {
     click: false, //点击事件
     pieType: "type1", //饼状、环状、南丁格尔图,其他
     updateWay:"refresh",//刷新方式----重新渲染
+    dataZoom: {
+      isAble: true,
+    },
     // 颜色
     color: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
     backgroundColor: "#ffffff",

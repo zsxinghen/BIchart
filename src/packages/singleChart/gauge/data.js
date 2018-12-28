@@ -11,6 +11,9 @@ export const data_gauge = [{
     updateWay: "refresh", //刷新方式----重新渲染
     tooltip: "type1",
     backgroundColor: "#ffffff",
+    dataZoom: {
+      isAble: true,
+    },
     title: {
       isShow: true,
       text: null,

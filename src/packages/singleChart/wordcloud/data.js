@@ -27,6 +27,9 @@ export const config_wordcloud = {
   remark: null, //备注
   click: false, //点击事件
   updateWay: "refresh", //刷新方式----重新渲染
+  dataZoom: {
+    isAble: true,
+  },
   title: {
     isShow: true,
     text: null,

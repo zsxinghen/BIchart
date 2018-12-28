@@ -14,6 +14,9 @@ export const data_radar = [
     chart: "radar", //图表类型
     remark: null, //备注
     click: false, //点击事件
+    dataZoom: {
+      isAble: true,
+    },
     title: {
       isShow: true,
       text: null,

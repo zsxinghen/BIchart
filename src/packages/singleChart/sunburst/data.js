@@ -27,6 +27,9 @@ export const data_sunburst = [{ //tree
     click: false, //点击事件
     updateWay: "refresh", //刷新方式----重新渲染
     // 颜色
+    dataZoom: {
+      isAble: true,
+    },
     color: ['#c23531', '#2f4554', '#61a0a8', '#d48265', '#91c7ae', '#749f83', '#ca8622', '#bda29a', '#6e7074', '#546570', '#c4ccd3'],
     backgroundColor: "#ffffff",
     title: {

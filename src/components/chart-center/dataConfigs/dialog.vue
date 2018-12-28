@@ -2,65 +2,26 @@
 本地数据源配置弹窗部分
 */
 <template>
-  <board-toast
-    :config="dialogConfig"
-    @cancel="close"
-    @save="save"
-    class="data-set-config"
-  >
-    <el-form
-      :model="ruleForm"
-      :rules="rules"
-      ref="ruleForm"
-      class="demo-ruleForm"
-      style="margin-right:30px;margin-bottom:10px"
-    >
+  <board-toast :config="dialogConfig" @cancel="close" @save="save" class="data-set-config">
+    <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="demo-ruleForm" style="margin-right:30px;margin-bottom:10px">
       <el-row :gutter="24">
         <el-col :span="12">
-          <el-form-item
-            label="数据源："
-            label-width="100px"
-            prop="sourceType"
-          >
-            <el-radio
-              v-model="ruleForm.sourceType"
-              label="local"
-              @change="resetData"
-            >本地</el-radio>
-            <el-radio
-              v-model="ruleForm.sourceType"
-              label="remote"
-              @change="resetData"
-            >远程</el-radio>
+          <el-form-item label="数据源：" label-width="100px" prop="sourceType">
+            <el-radio v-model="ruleForm.sourceType" label="local" @change="resetData">本地</el-radio>
+            <el-radio v-model="ruleForm.sourceType" label="remote" @change="resetData">远程</el-radio>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item
-            label="数据集名称："
-            label-width="100px"
-            prop="tableName"
-          >
-            <el-input
-              v-model="ruleForm.tableName"
-              placeholder="数据集名称"
-              size="mini"
-            ></el-input>
+          <el-form-item label="数据集名称：" label-width="100px" prop="tableName">
+            <el-input v-model="ruleForm.tableName" placeholder="数据集名称" size="mini"></el-input>
           </el-form-item>
         </el-col>
         <keep-alive>
           <div v-if="ruleForm.sourceType=='local'">
             <el-col :span="24">
-              <el-form-item
-                label=""
-                label-width="30px"
-                prop="domain"
-              >
-                <el-input
-                  type="textarea"
-                  :autosize="{ minRows: 2, maxRows: 4}"
-                  placeholder="请输入本地数据源，以json格式输入"
-                  v-model="ruleForm.domain"
-                >
+              <el-form-item label="" label-width="30px" prop="domain">
+                <el-input type="textarea" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请输入本地数据源，以json格式输入"
+                  v-model="ruleForm.domain">
                 </el-input>
               </el-form-item>
             </el-col>
@@ -69,12 +30,7 @@
         <keep-alive>
           <!-- 远程数据源 -->
           <div v-if="ruleForm.sourceType=='remote'">
-            <remote-data
-              :dataConfig="config.dataConfig"
-              ref="remoteData"
-              :ruleForm="ruleForm"
-              :config="config"
-            ></remote-data>
+            <remote-data :dataConfig="config.dataConfig" ref="remoteData" :ruleForm="ruleForm" :config="config"></remote-data>
           </div>
         </keep-alive>
       </el-row>
@@ -86,6 +42,7 @@
 import { mapGetters } from "vuex";
 import { default as urls } from "../../../api/urls/chart-center.js";
 import remoteData from "./remoteData.vue";
+import { default as defaultConfig } from "../../../packages/indexConfig.js";
 
 export default {
   data() {
@@ -161,23 +118,25 @@ export default {
   watch: {
     "dialogConfig.dialogVisible"() {
       if (this.isSave) {
-        let obj = JSON.parse(JSON.stringify(this.config));
-        //当维度、数值变化时，初始化所有配置信息
-        this.$set(this.config, "chart", "table");
-        this.$set(this.config, "type", "table");
-        this.$set(this.config, "settings", {
-          chart: "table",
-          type: "table",
-          title: {},
-          remark: "",
-          dataZoom: {}
+        setTimeout(() => {
+          let obj = JSON.parse(JSON.stringify(this.config));
+          this.$set(this.config, "dataConfig", {
+            ...obj.dataConfig
+          });
+          this.$set(this.config.dataConfig, "dimension", []);
+          this.$set(this.config.dataConfig, "numberValue", []);
+
+          //当维度、数值变化时，初始化所有配置信息
+          this.$set(this.config, "data", null);
+          this.$set(this.config, "chart", "table");
+          this.$set(this.config, "type", "table");
+
+          this.$set(
+            this.config,
+            "settings",
+            Object.assign({}, defaultConfig[`config_table`])
+          );
         });
-        this.$set(this.config, "dataConfig", {
-          ...obj.dataConfig
-        });
-        this.$set(this.config, "data", null);
-        this.$set(this.config.dataConfig, "dimension", []);
-        this.$set(this.config.dataConfig, "numberValue", []);
       }
     }
   },
@@ -364,7 +323,6 @@ export default {
           }
         });
       }
-
       return flag;
     }
   }
@@ -383,10 +341,12 @@ export default {
   box-sizing: border-box;
   overflow-y: auto;
 }
+
 .el-input--mini .el-input__inner {
   height: 28px !important;
   line-height: 28px;
 }
+
 .data-set-config {
   .el-form-item {
     margin-bottom: 10px;

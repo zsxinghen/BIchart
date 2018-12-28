@@ -33,11 +33,14 @@ export default {
         let newArr = null;
         if (res.result) {
           this_.$set(this_.config, "nowTime", res.model.nowTime);
-          newArr = res.model.maps.map(val => JSON.parse(val))
-          // this_.$message({
-          //   type: "success",
-          //   message: res.message
-          // });
+          newArr = res.model.maps.map(val => {
+            if(typeof val == 'string'){
+              return JSON.parse(val)
+            }
+            else{
+              return val
+            }
+            })
         } else {
           this_.$message({
             type: "warning",

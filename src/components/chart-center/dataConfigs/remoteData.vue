@@ -56,8 +56,8 @@
       </el-form-item>
       <div style="position:relative;margin-bottom:30px">
         <div style="right: 0px;position: absolute;">
-          <el-button type="primary" size="mini" :disabled="!options.list||!options.list.length" @click="ruleSetting">过滤规则配置</el-button>
-          <el-button type="primary" size="mini" :disabled="!options.list||!options.list.length" @click="previewData">数据预览</el-button>
+          <el-button type="primary" size="mini" :disabled="isDisabled()" @click="ruleSetting">过滤规则配置</el-button>
+          <el-button type="primary" size="mini" :disabled="isDisabled()" @click="previewData">数据预览</el-button>
         </div>
       </div>
     </el-col>
@@ -250,6 +250,19 @@ export default {
             });
           }
         });
+    },
+    isDisabled() {
+      if (this.options.list) {
+        let arr = this.options.list.filter(v => v.isCheck == true);
+        if (arr.length > 0) {
+          return false;
+        } else {
+          return true;
+        }
+      }
+      else{
+        return true
+      }
     }
   }
 };

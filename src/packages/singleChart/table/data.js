@@ -37,6 +37,9 @@ export const data_table = {
     type: 'table',
     remark: "",
     combineRow: true,
+    dataZoom: {
+      isAble: true,
+    },
     updateWay: "refresh", //刷新方式----重新渲染
     title: {
       isShow: true,

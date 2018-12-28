@@ -22,7 +22,30 @@ export default {
         btnData: ["cancel", "save"],
         appendToBody: true
       },
-       
+      options: {
+        selectType: [
+          {
+            label: "大于",
+            value: ">"
+          },
+          {
+            label: "小于",
+            value: "<"
+          },
+          {
+            label: "等于",
+            value: "="
+          },
+          {
+            label: "不等于",
+            value: "!="
+          },
+          {
+            label: "包含",
+            value: "in"
+          }
+        ]
+      }
     };
   },
   props: {
@@ -53,7 +76,6 @@ export default {
 };
 </script>
 <style>
-.data-rule-config{
-
+.data-rule-config {
 }
 </style>

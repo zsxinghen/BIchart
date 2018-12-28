@@ -7,6 +7,9 @@ export const data_card = [{
     chart: "card",
     type: "card",
     remark: "",
+    dataZoom: {
+      isAble: true,
+    },
     title: {
       isShow: true,
       text: "",
