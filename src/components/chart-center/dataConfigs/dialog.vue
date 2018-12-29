@@ -118,25 +118,22 @@ export default {
   watch: {
     "dialogConfig.dialogVisible"() {
       if (this.isSave) {
-        setTimeout(() => {
-          let obj = JSON.parse(JSON.stringify(this.config));
-          this.$set(this.config, "dataConfig", {
-            ...obj.dataConfig
-          });
-          this.$set(this.config.dataConfig, "dimension", []);
-          this.$set(this.config.dataConfig, "numberValue", []);
-
-          //当维度、数值变化时，初始化所有配置信息
-          this.$set(this.config, "data", null);
-          this.$set(this.config, "chart", "table");
-          this.$set(this.config, "type", "table");
-
-          this.$set(
-            this.config,
-            "settings",
-            Object.assign({}, defaultConfig[`config_table`])
-          );
+        //当维度、数值变化时，初始化所有配置信息
+        let obj = JSON.parse(JSON.stringify(this.config));
+        this.$set(this.config, "dataConfig", {
+          ...obj.dataConfig
         });
+        this.$set(this.config.dataConfig, "dimension", []);
+        this.$set(this.config.dataConfig, "numberValue", []);
+        this.$set(this.config, "data", null);
+        this.$set(this.config, "chart", "table");
+        this.$set(this.config, "type", "table");
+
+        this.$set(
+          this.config,
+          "settings",
+          Object.assign({}, defaultConfig[`config_table`])
+        );
       }
     }
   },
@@ -146,6 +143,16 @@ export default {
       // 初始化数据
       this.isSave = false;
       this.ruleForm = JSON.parse(JSON.stringify(this.dataConfig));
+
+      if (this.ruleForm.sourceType == "remote") {
+        this.$nextTick(_ => {
+          this.$refs.remoteData.getModel();
+          this.$refs.remoteData.getHouse();
+          this.$refs.remoteData.getVersion();
+          this.$refs.remoteData.options.list = this.config.dataConfig.findList;
+          // this.$refs.remoteData.getList();
+        });
+      }
       this.dialogConfig.dialogVisible = true;
     },
     close() {
@@ -184,6 +191,8 @@ export default {
         this.ruleForm.modelCode = null;
         this.ruleForm.version = null;
         this.$refs.remoteData.options.list = null;
+        this.ruleForm.findCond = null;
+        this.ruleForm.findCondJson = null;
         this.ruleForm.findCond = null;
         this.ruleForm.findCondJson = null;
       }
@@ -258,8 +267,8 @@ export default {
         ...obj
       };
       if (this.ruleForm.findCond) {
-        param.findCond = this.ruleForm.findCond;
-        param.findCondJson = this.ruleForm.findCondJson;
+        // param.findCond = this.ruleForm.findCond;
+        param.findCondJson = JSON.stringify(this.ruleForm.findCondJson);
       }
       this.$apis
         .fetchPostJson(urls.addOrUpd, {
@@ -277,6 +286,8 @@ export default {
             this.config.dataConfig.modelCode = this.ruleForm.modelCode;
             this.config.dataConfig.version = this.ruleForm.version;
             this.config.dataConfig.findList = this.$refs.remoteData.options.list;
+            this.config.dataConfig.findCond = this.ruleForm.findCond;
+            this.config.dataConfig.findCondJson = this.ruleForm.findCondJson;
             let list = this.$refs.remoteData.options.list
               .filter(v => v.isCheck == true)
               .map(v => {

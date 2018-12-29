@@ -180,7 +180,10 @@ export default {
               }
             } else {
               if (data.reportType == "自定义") {
-                this.$emit("boardHandler", res, data, id);
+                this.$nextTick(_=>{
+                    this.$emit("boardHandler", res, data, id);
+                })
+                
               } else {
                 this.$set(data, "unzipPath", res.model.unzipPath);
               }

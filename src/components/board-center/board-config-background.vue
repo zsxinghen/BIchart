@@ -26,7 +26,6 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
-
       </div>
     </el-form>
   </board-toast>

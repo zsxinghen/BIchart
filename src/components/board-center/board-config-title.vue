@@ -40,11 +40,11 @@
           </el-radio-group>
         </el-col>
       </el-form-item>
-      <!-- <el-form-item label="是否显示:">
+      <el-form-item label="是否显示:">
         <el-col :span="20">
           <el-checkbox v-model="titleConfig.title.isShow">显示</el-checkbox>
         </el-col>
-      </el-form-item> -->
+      </el-form-item>
       <h1>副标题</h1>
       <el-form-item label="标题:">
         <el-col :span="20">
@@ -81,11 +81,11 @@
           </el-radio-group>
         </el-col>
       </el-form-item>
-      <!-- <el-form-item label="是否显示:">
+      <el-form-item label="是否显示:">
         <el-col :span="20">
           <el-checkbox v-model="titleConfig.subTitle.isShow">显示</el-checkbox>
         </el-col>
-      </el-form-item> -->
+      </el-form-item>
     </el-form>
   </board-toast>
 </template>

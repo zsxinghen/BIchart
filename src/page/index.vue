@@ -97,15 +97,15 @@ export default {
     },
     // 设置自定义看板数据
     boardHandler(res, data) {
-      // this.$set(data, "layoutConfig", res.model.layoutConfig);
-      // this.$set(data, "layoutId", res.model.layoutId);
       this.configData.layout = JSON.parse(res.model.layoutConfig).layout;
       res.model.datasourceLocationValueDtos.forEach(v => {
         let flag = this.configData.layout.findIndex(k => k.i === v.reportId);
         if (flag != -1) {
-          this.configData.layout[flag].config = JSON.parse(
-            v.picConfig.replace(/\$/g, "%")
-          );
+          if (v.picConfig) {
+            this.configData.layout[flag].config = JSON.parse(
+              v.picConfig.replace(/\$/g, "%")
+            );
+          }
         }
       });
       this.configData.layout.forEach(v => {});

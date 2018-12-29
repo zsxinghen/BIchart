@@ -13,6 +13,7 @@ export default {
   getList: ({
     commit
   }, this_,) => {
+    console.log(this_.config.dataConfig)
     let arr = this_.config.dataConfig.dimension
       .concat(this_.config.dataConfig.numberValue)
       .map(val => val.prop); //去合并维度、数值组合数组

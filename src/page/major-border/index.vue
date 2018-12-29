@@ -47,7 +47,7 @@
                         >
                         <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
                         <!-- <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button> -->
-                        <div slot="tip" class="el-upload__tip">只能上传zip文件，且必须包含html文件</div>
+                        <div slot="tip" class="el-upload__tip">请上传zip文件，且必须包含html文件与图片</div>
                     </el-upload>
                 </el-form-item>
              </el-form>

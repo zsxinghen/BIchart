@@ -5,7 +5,7 @@
   <div class="remote-data">
     <el-col :span="8">
       <el-form-item label="数据仓库：" label-width="100px" prop="wareHouseId">
-        <el-select v-model="ruleForm.wareHouseId" placeholder="请选择" size="mini" @change="getModel()">
+        <el-select v-model="ruleForm.wareHouseId" placeholder="请选择" size="mini" @change="getModel(true)">
           <el-option v-for="item in options.warehouse" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -13,7 +13,7 @@
     </el-col>
     <el-col :span="8">
       <el-form-item label="数据模型：" label-width="100px" prop="dataModelCode">
-        <el-select v-model="ruleForm.ModelId" placeholder="请选择" size="mini" :disabled="!ruleForm.wareHouseId" @change="getVersion()">
+        <el-select v-model="ruleForm.ModelId" placeholder="请选择" size="mini" :disabled="!ruleForm.wareHouseId" @change="getVersion(true)">
           <el-option v-for="item in options.model" :key="item.value" :label="item.label" :value="item.value">
           </el-option>
         </el-select>
@@ -50,9 +50,9 @@
     </el-col> -->
     <el-col :span="24">
       <el-form-item label="过滤规则：" label-width="100px" prop="sourceType">
-        <el-input type="textarea" :readonly="true" :autosize="{ minRows: 2, maxRows: 4}" placeholder="请设置过滤规则" style="cursor: default;"
-          v-model="value">
-        </el-input>
+        <div class="data-filter-content">
+          <p v-for="(item,index) in ruleForm.findCondJson" :key="index">{{item}}</p>
+       </div>
       </el-form-item>
       <div style="position:relative;margin-bottom:30px">
         <div style="right: 0px;position: absolute;">
@@ -61,13 +61,13 @@
         </div>
       </div>
     </el-col>
-    <data-rule-setting :dataConfig="config.dataConfig"  ref="dataRuleSetting" :ruleForm="ruleForm" :config="config"></data-rule-setting>
+    <data-filter :dataConfig="config.dataConfig" :list="options.list"   ref="filter" :ruleForm="ruleForm" :config="config"></data-filter>
     <data-preview  ref="dataPreview"></data-preview>
   </div>
 </template>
 <script>
 import { default as url } from "../../../api/urls/chart-center.js";
-import dataRuleSetting from "./dataRuleSetting.vue";
+import dataFilter from "./filter.vue";
 import dataPreview from "./dataPreview.vue";
 export default {
   data() {
@@ -99,7 +99,7 @@ export default {
     this.getHouse();
   },
   components: {
-    dataRuleSetting,
+    dataFilter,
     dataPreview
   },
   methods: {
@@ -127,7 +127,7 @@ export default {
         });
     },
     // 获取数据模型下拉
-    getModel() {
+    getModel(boolen) {
       this.$apis
         .fetchPost(url.getModel, {
           params: {
@@ -137,6 +137,11 @@ export default {
         })
         .then(res => {
           if (res.result) {
+            if (boolen) {
+              this.ruleForm.ModelId = "";
+              this.ruleForm.version = "";
+              this.options.list = [];
+            }
             this.options.model = res.model.map(v => {
               return {
                 value: v.id,
@@ -153,7 +158,7 @@ export default {
         });
     },
     // 获取版本信息下拉
-    getVersion() {
+    getVersion(boolen) {
       let flag = this.options.model.findIndex(
         v => v.value == this.ruleForm.ModelId
       );
@@ -173,6 +178,10 @@ export default {
         })
         .then(res => {
           if (res.result) {
+            if (boolen) {
+              this.ruleForm.version = "";
+              this.options.list = [];
+            }
             this.options.version = res.model.map(v => {
               return {
                 value: v.versionNo,
@@ -211,7 +220,8 @@ export default {
     },
     // 过滤规则设置
     ruleSetting() {
-      this.$refs.dataRuleSetting.show();
+      console.log(this.$refs.filter);
+      this.$refs.filter.show();
     },
     // 预览数据
     previewData() {
@@ -259,13 +269,28 @@ export default {
         } else {
           return true;
         }
-      }
-      else{
-        return true
+      } else {
+        return true;
       }
     }
   }
 };
 </script>
 <style lang="less">
+.remote-data {
+  .data-filter-content {
+    width: 100%;
+    min-height: 200px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    word-break: break-all;
+    margin-bottom: 20px;
+    padding: 5px 10px;
+    border: 1px solid #d1d3d5;
+    p {
+      height: 24px;
+      line-height: 24px;
+    }
+  }
+}
 </style>
