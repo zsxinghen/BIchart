@@ -140,6 +140,14 @@ export default {
             if (boolen) {
               this.ruleForm.ModelId = "";
               this.ruleForm.version = "";
+              this.ruleForm.findCond = [
+                {
+                  prop: "",
+                  symbol: "",
+                  value: ""
+                }
+              ];
+              this.ruleForm.findCondJson = [];
               this.options.list = [];
             }
             this.options.model = res.model.map(v => {
@@ -181,6 +189,14 @@ export default {
             if (boolen) {
               this.ruleForm.version = "";
               this.options.list = [];
+              this.ruleForm.findCond = [
+                {
+                  prop: "",
+                  symbol: "",
+                  value: ""
+                }
+              ];
+              this.ruleForm.findCondJson = [];
             }
             this.options.version = res.model.map(v => {
               return {
@@ -209,7 +225,6 @@ export default {
         .then(res => {
           if (res.result) {
             this.options.list = res.model.list;
-            console.log(this.options.list);
           } else {
             this.$message({
               type: "warning",
@@ -220,7 +235,6 @@ export default {
     },
     // 过滤规则设置
     ruleSetting() {
-      console.log(this.$refs.filter);
       this.$refs.filter.show();
     },
     // 预览数据
@@ -228,10 +242,15 @@ export default {
       let arr = this.options.list
         .filter(v => v.isCheck == true)
         .map(v => v.alias);
+      let sqlObj = {};
+      if (this.ruleForm.findCondJson && this.ruleForm.findCondJson.length > 0) {
+        sqlObj = { findCondJson: JSON.stringify(this.ruleForm.findCondJson) };
+      }
       let param = {
         findList: arr,
         version: this.ruleForm.version,
-        dataModelCode: this.ruleForm.modelCode
+        dataModelCode: this.ruleForm.modelCode,
+        ...sqlObj
       };
       if (this.ruleForm.findcond) {
         param["findcond"] = this.ruleForm.findcond;

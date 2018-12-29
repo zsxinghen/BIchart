@@ -9,7 +9,7 @@
     <div class="data-filter-top">
       <p v-for="(item,i) in setArr" :key="i">
         <el-select v-model="item.prop" placeholder="请选择" size="mini" style="margin:0 10px 0 20px">
-          <el-option v-for="item in list" :key="item.alias" :label="item.remark" :value="item.alias" :disabled="item.disabled"></el-option>
+          <el-option v-for="item in list" :key="item.alias" :label="item.remark" :value="item.alias+' '+item.dataType" :disabled="item.disabled"></el-option>
         </el-select>
         <el-select v-model="item.symbol" placeholder="请选择" size="mini" style="margin:0 10px 0 20px">
           <el-option v-for="item in options.symbol" :key="item.value" :label="item.label" :value="item.value"></el-option>
@@ -87,21 +87,29 @@ export default {
         if (this.setArr) {
           this.setArr.forEach(v => {
             let str, value;
+            let type = v.prop.split(" ")[1];
+            let prop = v.prop.split(" ")[0];
             if (v.symbol == "in") {
-              str = v.prop + " like concat('%' ," + v.value + " , '%')";
+              str = prop + " like concat('%' ," + v.value + " , '%')";
             } else {
               if (v.value) {
-                value = " '" + v.value + "'";
+                if (type == "int" || type == "long") {
+                  value = " " + v.value;
+                } else {
+                  value = " '" + v.value + "'";
+                }
               } else {
                 value = "";
               }
-              str = v.prop + " " + v.symbol + value;
+              str = prop + " " + v.symbol + value;
             }
             this.filterArr.push(str);
           });
           this.list.forEach(v => {
-             v.disabled = false;
-            let flag = this.setArr.findIndex(k => k.prop == v.alias);
+            v.disabled = false;
+            let flag = this.setArr.findIndex(
+              k => k.prop.split(" ")[0] == v.alias
+            );
             console.log(flag);
             if (flag != -1) {
               v.disabled = true;
