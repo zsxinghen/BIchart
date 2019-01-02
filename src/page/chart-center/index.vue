@@ -166,6 +166,7 @@ export default {
           sourceType: "local",
           tableName: "",
           domain: null,
+          findCondJson:[],
           /* 左边列表部分
           name--显示名称 ，porp字段名
           */
@@ -214,7 +215,7 @@ export default {
   created() {
     if (this.getCurrConfigs.config) {
       //已配置则赋值
-      this.config = JSON.parse(JSON.stringify(this.getCurrConfigs.config));
+      this.config = { ...this.getCurrConfigs.config };
 
       // debugger;
     } else {

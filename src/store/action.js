@@ -13,7 +13,7 @@ export default {
   getList: ({
     commit
   }, this_,) => {
-    console.log(this_.config.dataConfig)
+  
     let arr = this_.config.dataConfig.dimension
       .concat(this_.config.dataConfig.numberValue)
       .map(val => val.prop); //去合并维度、数值组合数组
@@ -51,7 +51,7 @@ export default {
         // 根据图表类型获取指定格式数据
         let data = this_.$setData.listData(
           this_.config.chart,
-          newArr,
+          newArr||[],
           this_.config.dataConfig.dimension,
           this_.config.dataConfig.numberValue
         )

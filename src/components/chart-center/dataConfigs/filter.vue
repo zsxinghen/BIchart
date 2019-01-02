@@ -4,18 +4,22 @@
 <template>
   <board-toast :config="dialogConfig" @cancel="close" @save="save" class="data-rule-config">
     <!-- 设置筛选 -->
-
     <h1>规则设置</h1>
     <div class="data-filter-top">
       <p v-for="(item,i) in setArr" :key="i">
         <el-select v-model="item.prop" placeholder="请选择" size="mini" style="margin:0 10px 0 20px">
-          <el-option v-for="item in list" :key="item.alias" :label="item.remark" :value="item.alias+' '+item.dataType" :disabled="item.disabled"></el-option>
+          <el-option v-for="item in filterlist" :key="item.alias" :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
         </el-select>
         <el-select v-model="item.symbol" placeholder="请选择" size="mini" style="margin:0 10px 0 20px">
           <el-option v-for="item in options.symbol" :key="item.value" :label="item.label" :value="item.value"></el-option>
         </el-select>
         <el-input v-model="item.value" size="mini" style="width:200px"></el-input>
-        <el-button type="text" icon="el-icon-delete" style="margin:0 10px" :disabled="setArr&&setArr.length<=1" @click="setArr.pop();"></el-button>
+        <el-button type="text" icon="el-icon-delete" style="margin:0 10px" v-if="setArr.length>1" :disabled="setArr&&setArr.length<1" @click="setArr.splice(i,1)"></el-button>
+        <el-button type="text" icon="el-icon-delete" style="margin:0 10px" v-if="setArr.length==1" @click="setArr=[{
+          prop: '',
+          symbol: '',
+          value: ''
+        }]"></el-button>
         <el-button type="text" icon="el-icon-plus" style="margin:0 10px" v-show="i==(setArr.length-1)" :disabled="setArr&&setArr.length>=10"
           @click="setArr.push({
           prop: '',
@@ -45,6 +49,7 @@ export default {
       },
       setArr: [], // 配置数组
       filterArr: [], // 筛选数组
+      filterlist: [],
       options: {
         symbol: [
           {
@@ -90,7 +95,7 @@ export default {
             let type = v.prop.split(" ")[1];
             let prop = v.prop.split(" ")[0];
             if (v.symbol == "in") {
-              str = prop + " like concat('%' ," + v.value + " , '%')";
+              str = prop + " like '%" + v.value + "%'";
             } else {
               if (v.value) {
                 if (type == "int" || type == "long") {
@@ -105,12 +110,11 @@ export default {
             }
             this.filterArr.push(str);
           });
-          this.list.forEach(v => {
+          this.filterlist.forEach(v => {
             v.disabled = false;
             let flag = this.setArr.findIndex(
               k => k.prop.split(" ")[0] == v.alias
             );
-            console.log(flag);
             if (flag != -1) {
               v.disabled = true;
             }
@@ -139,22 +143,39 @@ export default {
   },
   methods: {
     show() {
-      this.filterArr = this.ruleForm.findCondJson || [];
-      this.setArr = this.ruleForm.findCond || [
+      this.filterArr = [...this.ruleForm.findCondJson] || [];
+      this.setArr = [...this.ruleForm.findCond] || [
         {
           prop: "",
           symbol: "",
           value: ""
         }
       ];
+      this.filterlist = this.list
+        .filter(v => v.isCheck == true)
+        .map(k => {
+          let disabled = {};
+          if (k.disabled) {
+            disabled = {
+              disabled: true
+            };
+          }
+          return {
+            label: k.remark,
+            value: k.alias + " " + k.dataType,
+            ...disabled
+          };
+        });
       this.dialogConfig.dialogVisible = true;
     },
     close() {
       this.dialogConfig.dialogVisible = false;
     },
     save() {
-      this.$set(this.ruleForm, "findCond", this.setArr);
-      this.$set(this.ruleForm, "findCondJson", this.filterArr);
+      this.$set(this.ruleForm, "findCond", [...this.setArr]);
+      this.$set(this.$parent, "findCondJson", [...this.filterArr]);
+      this.$set(this.ruleForm, "findCondJson", [...this.filterArr]);
+
       this.dialogConfig.dialogVisible = false;
     }
   }

@@ -81,21 +81,45 @@ export default {
       rules: {
         tableName: [
           {
+            require: true,
             validator: validateName,
             trigger: "blur"
           }
         ],
         domain: [
           {
-            validator: validateDomain,
+            require: true,
+
             trigger: "blur"
           }
         ]
+        // wareHouseId: [
+        //   {
+        //     require: true,
+        //     message: "请选择数据仓库",
+        //     trigger: "blur"
+        //   }
+        // ],
+        // dataModelCode: [
+        //   {
+        //     require: true,
+        //     message: "请选择数据模型",
+        //     trigger: "blur"
+        //   }
+        // ],
+        // version: [
+        //   {
+        //     require: true,
+        //     message: "请选择版本",
+        //     trigger: "blur"
+        //   }
+        // ]
       },
       ruleForm: {
         sourceType: "local",
         tableName: "",
-        domain: null
+        domain: null,
+        findCondJson: []
       }
     };
   },
@@ -119,7 +143,7 @@ export default {
     "dialogConfig.dialogVisible"() {
       if (this.isSave) {
         //当维度、数值变化时，初始化所有配置信息
-        let obj = JSON.parse(JSON.stringify(this.config));
+        let obj = { ...this.config };
         this.$set(this.config, "dataConfig", {
           ...obj.dataConfig
         });
@@ -128,7 +152,6 @@ export default {
         this.$set(this.config, "data", null);
         this.$set(this.config, "chart", "table");
         this.$set(this.config, "type", "table");
-
         this.$set(
           this.config,
           "settings",
@@ -146,6 +169,7 @@ export default {
 
       if (this.ruleForm.sourceType == "remote") {
         this.$nextTick(_ => {
+          this.$refs.remoteData.findCondJson = this.ruleForm.findCondJson;
           this.$refs.remoteData.getModel();
           this.$refs.remoteData.getHouse();
           this.$refs.remoteData.getVersion();
@@ -154,6 +178,11 @@ export default {
         });
       }
       this.dialogConfig.dialogVisible = true;
+      this.$nextTick(_ => {
+        if (this.$refs["ruleForm"]) {
+          this.$refs["ruleForm"].resetFields();
+        }
+      });
     },
     close() {
       this.dialogConfig.dialogVisible = false;
@@ -161,21 +190,40 @@ export default {
     save() {
       if (this.ruleForm.sourceType === "local") {
         //本地
-        if (this.ruleForm.id || this.ruleForm.id === 0) {
-          this.saveLocalData(urls.updUrl, {
-            id: this.ruleForm.id
-          }); // 编辑本地数据源
-        } else {
-          this.saveLocalData(urls.addUrl); // 新增本地数据源
-        }
+
+        this.$refs["ruleForm"].validate(valid => {
+          if (valid) {
+            if (this.ruleForm.id || this.ruleForm.id === 0) {
+              this.saveLocalData(urls.updUrl, {
+                id: this.ruleForm.id
+              }); // 编辑本地数据源
+            } else {
+              this.saveLocalData(urls.addUrl); // 新增本地数据源
+            }
+          } else {
+            this.$message({
+              type: "warning",
+              message: "请把内容填写完整"
+            });
+          }
+        });
       } else {
-        if (this.ruleForm.id || this.ruleForm.id === 0) {
-          this.saveRemoteData({
-            id: this.ruleForm.id
-          }); // 编辑远程数据源
-        } else {
-          this.saveRemoteData(); // 新增本地数据源
-        }
+        this.$refs["ruleForm"].validate(valid => {
+          if (valid) {
+            if (this.ruleForm.id || this.ruleForm.id === 0) {
+              this.saveRemoteData({
+                id: this.ruleForm.id
+              }); // 编辑远程数据源
+            } else {
+              this.saveRemoteData(); // 新增本地数据源
+            }
+          } else {
+            this.$message({
+              type: "warning",
+              message: "请把内容填写完整"
+            });
+          }
+        });
         //远程
       }
     },
@@ -268,7 +316,7 @@ export default {
       };
       if (this.ruleForm.findCond) {
         // param.findCond = this.ruleForm.findCond;
-        param.findCondJson = JSON.stringify(this.ruleForm.findCondJson);
+        param.findCond = this.ruleForm.findCondJson;
       }
       this.$apis
         .fetchPostJson(urls.addOrUpd, {
@@ -345,7 +393,7 @@ export default {
   min-height: 300px !important;
   max-height: 300px !important;
   width: 100%;
-  padding: 10px;
+  margin: 10px 0;
   // margin-bottom: 20px;
   border: 1px solid #d1d3d5;
   background: #fff;

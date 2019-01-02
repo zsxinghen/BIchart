@@ -51,7 +51,7 @@
     <el-col :span="24">
       <el-form-item label="过滤规则：" label-width="100px" prop="sourceType">
         <div class="data-filter-content">
-          <p v-for="(item,index) in ruleForm.findCondJson" :key="index">{{item}}</p>
+          <p v-for="(item,index) in findCondJson" :key="index">{{item}}</p>
        </div>
       </el-form-item>
       <div style="position:relative;margin-bottom:30px">
@@ -73,6 +73,7 @@ export default {
   data() {
     return {
       value: "",
+      findCondJson:[],
       options: {
         warehouse: [],
         model: [],
@@ -138,6 +139,9 @@ export default {
         .then(res => {
           if (res.result) {
             if (boolen) {
+              if (this.$refs["ruleForm"]) {
+                this.$refs["ruleForm"].resetFields();
+              }
               this.ruleForm.ModelId = "";
               this.ruleForm.version = "";
               this.ruleForm.findCond = [
@@ -187,6 +191,9 @@ export default {
         .then(res => {
           if (res.result) {
             if (boolen) {
+              if (this.$refs["ruleForm"]) {
+                this.$refs["ruleForm"].resetFields();
+              }
               this.ruleForm.version = "";
               this.options.list = [];
               this.ruleForm.findCond = [
@@ -243,8 +250,8 @@ export default {
         .filter(v => v.isCheck == true)
         .map(v => v.alias);
       let sqlObj = {};
-      if (this.ruleForm.findCondJson && this.ruleForm.findCondJson.length > 0) {
-        sqlObj = { findCondJson: JSON.stringify(this.ruleForm.findCondJson) };
+      if (this.findCondJson && this.findCondJson.length > 0) {
+        sqlObj = { findCondList: this.findCondJson };
       }
       let param = {
         findList: arr,

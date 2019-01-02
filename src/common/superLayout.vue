@@ -21,11 +21,12 @@
         @resized ="resizedEvent"
         @moved = "movingEvent">
         <!-- 背景 -->
-        <div class="bg"  @mouseenter="setDraggable(true)"></div>
+        <div class="bg" :style="`background:${setBackground(item)}`"  @mouseenter="setDraggable(true)"></div>
         <div class="grid-item-body" @mouseenter="setDraggable(false)">
           <slot :data="item"></slot>
         </div>
         <!--工具 -->
+
         <div class="toolbar" v-if="!isToolbar" @mousedown.stop @mousemove.stop @click.stop> 
           <el-popover
                 placement="bottom-start"
@@ -34,9 +35,9 @@
                 trigger="click"
                 v-model="item.boolen"
             >
-            <div class="popover-word" style="word-wrap:break-word">{{item.config&&item.config.settings.remark||'无'}}</div>
-          <svg class="icon" aria-hidden="true" slot="reference"  @click="handleClick(key,item,index,config)" v-for="key in tool" :key="key">
-            <use :xlink:href="'#icon-'+key"></use>
+          <div class="popover-word" style="word-wrap:break-word">{{item.config&&item.config.settings.remark||'无'}}</div>
+          <svg class="icon" aria-hidden="true" slot="reference"   @click="handleClick(key,item,index,config)" v-for="key in tool" :key="key">
+            <use :xlink:href="'#icon-'+key" ></use>
           </svg>
             </el-popover>
         </div>
@@ -58,7 +59,7 @@ export default {
     },
     tool: {
       default() {
-        return ["edit", "refresh", "details","zoom", "liandong", "more"];
+        return ["111", "edit", "refresh", "details", "zoom", "liandong", "more"];
       }
     }
   },
@@ -69,6 +70,16 @@ export default {
   },
   mounted() {},
   methods: {
+    setBackground(item) {
+      if (
+        item.config &&
+        item.config.settings &&
+        item.config.settings.backgroundColor
+      ) {
+        return item.config.settings.backgroundColor;
+      }
+      return "#ffffff";
+    },
     setDraggable(flag) {
       if (this.config.isDraggable) this.isDraggable = flag;
       else this.config.isDraggable = false;
@@ -85,8 +96,10 @@ export default {
       //刷新
       this.$emit("refreshLayoutItem");
     },
-    handleClick(method, data, index,config) {
-      this.$emit("handle" + method, data, index,config);
+    handleClick(method, data, index, config) {
+      if (method) {
+        this.$emit("handle" + method, data, index, config);
+      }
     },
     addLine(data) {
       //添加行
@@ -136,7 +149,7 @@ export default {
 </script>
 <style lang="less">
 .el-popper[x-placement^="bottom-start"] .popper__arrow {
-  left: 38.5px !important;
+  left: 56.5px !important;
 }
 .superLayout {
   width: 100%;

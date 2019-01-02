@@ -1,5 +1,5 @@
 <template>
-	<div  :id='id' class="my-bi-chart" style="padding:10px;box-sizing:border-box;height:100%;over-flow:auto">
+	<div  :id='id' class="my-bi-table" >
     <div v-show="config.settings.title.isShow&&config.settings.title.text" :style="`background:${config.settings.backgroundColor};padding:10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};
       color:${config.settings.title.color}`">{{config.settings.title.text}}</div>
 		<my-table :columns="config.data.columns" style="position:relative;" :config="config.settings" :rowspanConfig="rowspanConfig" :colspanConfig="config.data.colspanConfig" :tableData="config.data.tableData" >
@@ -35,12 +35,17 @@ export default {
     }
   },
   mounted() {
+    this.$nextTick(_ => {
+      this.setStyle();
+    });
+
     if (this.config.settings.combineRow && this.config.data) {
       let arr = this.config.data.columns.map(v => v.prop);
       this.$set(this, "rowspanConfig", arr);
     } else {
       this.$set(this, "rowspanConfig", []);
     }
+
     this.colspanConfig = [];
     this.config.data.columns.forEach(val => {
       val.align = "center";
@@ -50,7 +55,7 @@ export default {
     // 更改样式
     setStyle() {
       let dom = document.getElementById(`${this.id}`);
-      console.log(`${this.id}`)
+      console.log(`${this.id}`);
       let parDom = dom.parentElement;
       parDom.style.background = this.config.settings.backgroundColor;
     }
@@ -72,3 +77,12 @@ export default {
   }
 };
 </script>
+<style lang="less">
+.my-bi-table {
+  padding: 10px;
+  box-sizing: border-box;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+</style>

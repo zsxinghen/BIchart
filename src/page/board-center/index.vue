@@ -248,7 +248,7 @@ export default {
      *编辑 -- 把当前图表信息存入vuex
      */
     handleEdit(data, index) {
-      data.boolen = false;
+      // data.boolen = false;
       this.setCurrConfigs(data);
       this.setCurrNode(JSON.parse(JSON.stringify(this.currentNode)));
       this.setCurrchartId(data.i);

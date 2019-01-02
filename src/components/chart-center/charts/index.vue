@@ -38,7 +38,8 @@ export default {
   beforeMount() {
     this.getData();
   },
-  mounted() {},
+  mounted() {
+  },
   methods: {
     getData(boolen) {
       this.config.data = null;
