@@ -4,7 +4,7 @@
 <template>
   <board-toast :config="dialogConfig" @close="close"  class="data-rule-config">
     <div style="margin-bottom:20px">
-      <el-table :data="tableData"  border :stripe="true" :max-height="500" style="overflow-y:auto">
+      <el-table :data="tableData"  border :stripe="true" :height="500" style="overflow-y:auto">
         <el-table-column show-overflow-tooltip :prop="val.prop" :label="val.label" :min-width="60" v-for="(val,index) in columns" 
           :key="index" align="center" :resizable="true"></el-table-column>
       </el-table>

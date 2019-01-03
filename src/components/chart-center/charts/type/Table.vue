@@ -1,6 +1,6 @@
 <template>
 	<div  :id='id' class="my-bi-table" >
-    <div v-show="config.settings.title.isShow&&config.settings.title.text" :style="`background:${config.settings.backgroundColor};padding:10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};
+    <div  v-show="config.settings.title.isShow&&config.settings.title.text" :style="`flex:1;background:${config.settings.backgroundColor};padding:0 10px 10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};
       color:${config.settings.title.color}`">{{config.settings.title.text}}</div>
 		<my-table :columns="config.data.columns" style="position:relative;" :config="config.settings" :rowspanConfig="rowspanConfig" :colspanConfig="config.data.colspanConfig" :tableData="config.data.tableData" >
 		</my-table>
@@ -79,10 +79,12 @@ export default {
 </script>
 <style lang="less">
 .my-bi-table {
-  padding: 10px;
+  padding: 0 10px 10px;
   box-sizing: border-box;
   height: 100%;
   overflow: hidden;
   position: relative;
+  display: flex;
+  flex-direction: column;
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+<div class="table-wrapper">
   <table class="gridtable" :style="`border:1px solid ${config.td.borderColor}`">
     <thead>
       <tr>
@@ -11,13 +12,14 @@
       <tr v-for="(row,index) in data" :key="index">
         <td :style="`border:1px solid ${config.td.borderColor};font-size:${config.td.fontSize}px;font-family:${config.td.fontFamliy};
       color:${config.td.color};background:${config.tdColor}`"
-          v-for="(cell,i) in columns" :align="cell.align" :width="cell.width" :rowspan="row.rowSpanConfig.get(cell.prop)==null?1:row.rowSpanConfig.get(cell.prop)"
+          v-for="(cell,i) in columns" :align="cell.align"  :rowspan="row.rowSpanConfig.get(cell.prop)==null?1:row.rowSpanConfig.get(cell.prop)"
           :colspan="row.colSpanConfig.get(cell.prop)==null?1:row.colSpanConfig.get(cell.prop)" v-show="!((row.rowSpanConfig.get(cell.prop)!=null&&row.rowSpanConfig.get(cell.prop)==0)||(row.colSpanConfig.get(cell.prop)!=null&&row.colSpanConfig.get(cell.prop)==0))">
           {{ row[cell.prop]}}
         </td>
       </tr>
     </tbody>
   </table>
+</div>
 </template>
 <script>
 export default {
@@ -203,10 +205,14 @@ export default {
   // position: absolute !important;
   // top: 0;
   // bottom: 0;
-  // overflow: auto;
+  position: relative;
+  overflow: auto;
   height: 100%;
   width: 100%;
-
+  thead {
+    // position: sticky;
+    // top: 0;
+  }
   thead > tr {
     background: #eef1f6;
     height: 30px;
@@ -243,5 +249,29 @@ export default {
 
 .hidden {
   display: none;
+}
+
+.table-wrapper {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  /*滚动条样式*/
+  &::-webkit-scrollbar {
+    /*滚动条整体样式*/
+    width: 4px; /*高宽分别对应横竖滚动条的尺寸*/
+    height: 4px;
+  }
+  &::-webkit-scrollbar-thumb {
+    /*滚动条里面小方块*/
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+  }
+  &::-webkit-scrollbar-track {
+    /*滚动条里面轨道*/
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    border-radius: 0;
+    background: #F0F2F3;
+  }
 }
 </style>
