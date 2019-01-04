@@ -1,3 +1,6 @@
+/*
+*看板中心--专业模版新增
+*/
 <template>
     <div class="major-border">
         <board-toast :config="customConfig" @cancel="cancel" @save="save" @handleClose="customConfig.dialogVisible=false">

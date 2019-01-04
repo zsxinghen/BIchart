@@ -1,5 +1,5 @@
 /*
-*看板中心--标题配置
+*看板中心--背景
 */
 <template>
   <board-toast :config="dialogConfig" @cancel="close" @save="save" v-if="dialogConfig.dialogVisible" class="board-config-background">

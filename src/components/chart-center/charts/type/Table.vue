@@ -1,3 +1,6 @@
+/* 
+ *图表种类--表格
+ */
 <template>
 	<div  :id='id' class="my-bi-table" >
     <div  v-show="config.settings.title.isShow&&config.settings.title.text" :style="`flex:1;background:${config.settings.backgroundColor};padding:0 10px 10px;box-sizing:boder-box;text-align:${config.settings.title.align};font-size:${config.settings.title.fontSize}px;font-family:${config.settings.title.fontFamliy};

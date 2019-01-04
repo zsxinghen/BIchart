@@ -1,3 +1,6 @@
+/* 
+ *报表中心---右边图表配置部分
+ */
 <template>
   <div class="config-common">
     <div class="config box">

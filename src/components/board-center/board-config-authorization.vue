@@ -1,5 +1,5 @@
 /* 
- *看板授权
+ *看板中心--看板授权
  */
 <template>
   <board-toast :config="dialogConfig" @close="close" v-if="dialogConfig.dialogVisible">

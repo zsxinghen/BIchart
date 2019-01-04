@@ -1,3 +1,7 @@
+/* 
+ *图表种类--Echart图表部分
+ *联动在这里实现，通过eventHub.$on,.eventHub.$emit方式。
+ */
 <template>
   <div
     :id='id+"chart"'

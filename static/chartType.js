@@ -4,7 +4,7 @@
  * chart---图表类型下的图表种类
  * isAxis---是否显示坐标轴样式跟缩放组件
  * isVisualMap---图表根据数据变色
- * 
+ * isAble----a维度，b数值
  */
 export const types = (a, b) => {
   return [{

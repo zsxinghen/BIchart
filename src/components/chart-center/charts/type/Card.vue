@@ -1,3 +1,6 @@
+/* 
+ *图表种类--指标卡部分
+ */
 <template>
   <div :id="`card-${id}`" class="my-bi-card" :style="`background:${config.settings.backgroundColor}`">
     <div :class="[{

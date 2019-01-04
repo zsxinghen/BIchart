@@ -1,5 +1,5 @@
 /*
-* 映射配置
+*组件配置-- 映射配置
 */
 <template>
   <el-dialog title="映射配置" :visible.sync="visible.visualMap" :close-on-click-modal="false" width="50%" v-if="visible.visualMap">

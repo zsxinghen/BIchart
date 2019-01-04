@@ -1,4 +1,4 @@
-/* 颜色主题背景色部分*/
+/* 基础样式--颜色主题背景色部分*/
 <template>
   <div class="color-theme clearfix">
     <ul>

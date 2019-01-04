@@ -1,4 +1,4 @@
-/* 标题、图例定位部分 */
+/* 基础样式--标题、图例定位部分 */
 <template>
   <div class="popover-location">
     <ul>

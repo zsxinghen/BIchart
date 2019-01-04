@@ -1,3 +1,6 @@
+/*
+*看板中心--看版布局
+*/
 <template>
     <div class="custom-border">
         <board-toast :config="customConfig" @cancel="cancel" @save="save" @handleClose="customConfig.dialogVisible=false">

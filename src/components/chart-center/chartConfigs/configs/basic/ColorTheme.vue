@@ -1,4 +1,4 @@
-/* 颜色主题背景色部分*/
+/*基础样式-- 颜色主题背景色部分*/
 <template>
   <div class="theme-pick">
     <div class="color-box-show" slot="reference" :style=" {'border':'4px solid '+config.backgroundColor,background: 'linear-gradient('+setBackground(config.color)+')'}"></div>

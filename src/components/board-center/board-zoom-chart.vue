@@ -1,3 +1,7 @@
+
+/*
+*看板中心--放大
+*/
 <template>
   <div class="board-zoom-mask">
     <el-dialog :visible.sync="zoomObj.isShow" :show-close='false' :fullscreen="true" width="30%">
