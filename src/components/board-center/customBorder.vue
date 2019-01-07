@@ -41,114 +41,119 @@
 <script>
 import { default as urls } from "../../api/urls/layout-center.js";
 import { default as borderUrls } from "../../api/urls/board-center.js";
-import superLayout from '../../common/superLayout.vue'
+import superLayout from "../../common/superLayout.vue";
 export default {
-    data(){
-        return {
-            form:{
-                name:'',
-                value:'',
-            },
-            rules:{
-                name:[{ required: true, message: '请选输入看板名称', trigger: 'blur' }],
-                value:[{ required: true, message: '请选择布局方案', trigger: 'change' }]
-            },
-            configData: {
-                layout: [
-                
-                ],
-                rowHeight: 50,
-                isDraggable: false,
-                isResizable: false,
-                line: 1
-            },
-            customConfig:{
-                title: "布局设置", 
-                dialogVisible: false, 
-                width: "400px", 
-                btnData: ["cancel", "save"],
-                list:[]
-            },
-            modellist:[]
-        }
+  data() {
+    return {
+      form: {
+        name: "",
+        value: ""
+      },
+      rules: {
+        name: [{ required: true, message: "请输入看板名称", trigger: "blur" }],
+        value: [
+          { required: true, message: "请选择布局方案", trigger: "change" }
+        ]
+      },
+      configData: {
+        layout: [],
+        rowHeight: 50,
+        isDraggable: false,
+        isResizable: false,
+        line: 1
+      },
+      customConfig: {
+        title: "看板设置",
+        dialogVisible: false,
+        width: "400px",
+        btnData: ["cancel", "save"],
+        list: []
+      },
+      modellist: []
+    };
+  },
+  props: ["baseData"],
+  methods: {
+    show(data) {
+      this.form = {
+        name: "",
+        value: ""
+      };
+      if (this.$refs["ruleForm"]) {
+        this.$refs["ruleForm"].resetFields();
+      }
+      this.modellist = data;
+      this.customConfig.dialogVisible = true;
     },
-    props:['baseData'],
-    methods:{
-        show(data){
-            this.form={
-                name:'',
-                value:'',
-            };
-            this.modellist=data;
-            this.customConfig.dialogVisible=true
-        },
-        cancel(){
-            this.customConfig.dialogVisible=false;
-            this.$emit("close")
-        },
-        save(){
-            this.$refs['ruleForm'].validate((valid) => {
-                if (valid) {
-                    this.$apis.fetchPost(borderUrls.sideBar.add_layout, {
-                        params: {
-                            layoutId:this.form.value,
-                            alias:this.form.name,
-                            reportType:'自定义',
-                            folderId:this.baseData.id
-                        },
-                        Vue: this
-                    }).then(res => {
-                        if (res.result) {
-                            this.customConfig.dialogVisible=false;
-                            this.$emit('addSuccess')
-                            this.$message({
-                                type: "success",
-                                message: res.message
-                            });
-                        }
-                    });
-                } else {
-                    console.log('error submit!!');
-                    return false;
-                }
-            });
-        },
-        handleChange(id){
-            if(!id)
-                return 
-            this.$apis.fetchPost(urls.sideBar.search_layout, {
-                params: {
-                    id: id
-                },
-                Vue: this
-            }).then(res => {
-                if (res.result) {
-                    if(res.model.config)
-                        this.configData.layout=JSON.parse(res.model.config).layout
-                    else
-                        this.configData.layout=[]
-                }
-            });
-        }
+    cancel() {
+      this.customConfig.dialogVisible = false;
+      this.$emit("close");
     },
-    components:{
-        superLayout
+    save() {
+      this.$refs["ruleForm"].validate(valid => {
+        if (valid) {
+          this.$apis
+            .fetchPost(borderUrls.sideBar.add_layout, {
+              params: {
+                layoutId: this.form.value,
+                alias: this.form.name,
+                reportType: "自定义",
+                folderId: this.baseData.id
+              },
+              Vue: this
+            })
+            .then(res => {
+              if (res.result) {
+                this.customConfig.dialogVisible = false;
+                this.$emit("addSuccess");
+                this.$message({
+                  type: "success",
+                  message: res.message
+                });
+              }
+            });
+        } else {
+          console.log("error submit!!");
+          return false;
+        }
+      });
+    },
+    handleChange(id) {
+      if (!id) return;
+      this.$apis
+        .fetchPost(urls.sideBar.search_layout, {
+          params: {
+            id: id
+          },
+          Vue: this
+        })
+        .then(res => {
+          if (res.result) {
+            if (res.model.config)
+              this.configData.layout = JSON.parse(res.model.config).layout;
+            else this.configData.layout = [];
+          }
+        });
     }
-}
+  },
+  components: {
+    superLayout
+  }
+};
 </script>
 <style lang="less">
-    .custom-border{
-        .el-input__inner{
-            border: none;
-            border-bottom: 1px solid #c0c4cc;
-            border-radius: 0px;
-        }
-        .show-box{
-            width: 100%;
-            height: 200px;
-            overflow: auto;
-            border:1px solid #c0c4cc;
-            margin: 20px 0;
-        }
-    }
+.custom-border {
+  .el-input__inner {
+    border: none;
+    border-bottom: 1px solid #c0c4cc;
+    border-radius: 0px;
+  }
+  .show-box {
+    width: 100%;
+    height: 200px;
+    overflow: auto;
+    border: 1px solid #c0c4cc;
+    margin: 20px 0;
+  }
+}
 </style>

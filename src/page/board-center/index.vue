@@ -256,6 +256,12 @@ export default {
     },
     // 更新
     handleRefresh(data, index) {
+      if (!data.config) {
+        return this.$message({
+          type: "warning",
+          message: "请先配置图表"
+        });
+      }
       data.config.data = null;
       this.$refs["myChart" + data.i].getData(true);
     },
@@ -264,13 +270,25 @@ export default {
     },
     // 放大
     handleZoom(data, index) {
+      if (!data.config) {
+        return this.$message({
+          type: "warning",
+          message: "请先配置图表"
+        });
+      }
       this.zoomObj.config = data.config;
       this.zoomObj.i = data.i;
       this.zoomObj.isShow = true;
     },
     // 联动数据筛选
     handleLiandong(data, index, config) {
-      if (data.config.type != "chart") {
+      if (!data.config) {
+        return this.$message({
+          type: "warning",
+          message: "请先配置图表"
+        });
+      }
+      if (data.config && data.config.type != "chart") {
         this.$message({
           type: "info",
           message: "当前图表不支持联动"

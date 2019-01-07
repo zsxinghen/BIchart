@@ -63,7 +63,7 @@ export default {
     data(){
         return{
             value:'',
-            list:[{url:'http://www.baidu.com'}],
+            list:[],
             config:{
                 title:'专业看板维护',//弹窗标题
                 dialogVisible:false,//弹窗显示

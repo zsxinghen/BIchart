@@ -21,7 +21,7 @@ export default {
       } else {
         let index = this.baseData.findIndex(item => item.alias === value);
         if (index !== -1) {
-          callback(new Error("改文件夹下已存在该名称"));
+          callback(new Error("文件夹下已存在该名称"));
         } else {
           callback();
         }

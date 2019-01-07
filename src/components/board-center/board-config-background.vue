@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       dialogConfig: {
-        title: "标题设置", //弹窗标题
+        title: "背景设置", //弹窗标题
         dialogVisible: false, //弹窗显示
         width: "400px", //弹窗宽
         btnData: ["cancel", "save"]
@@ -73,10 +73,10 @@ export default {
       const isJPG = file.type === "image/jpeg";
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
+        this.$message.error("上传背景图片只能是 JPG 格式!");
       }
       if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 2MB!");
+        this.$message.error("上传背景图片大小不能超过 2MB!");
       }
       return isJPG && isLt2M;
     },
@@ -154,8 +154,8 @@ export default {
   .el-form-item {
     margin-bottom: 0;
   }
-  .el-form{
-      margin-bottom: 20px;
+  .el-form {
+    margin-bottom: 20px;
   }
 }
 </style>

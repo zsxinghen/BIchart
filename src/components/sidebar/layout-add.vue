@@ -4,7 +4,7 @@
 <template>
     <board-toast :config="dialogConfig" @cancel="close" @save="save" v-if="dialogConfig.dialogVisible">
          <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-                <el-form-item label="文件名称" prop="name">
+                <el-form-item label="布局名称" prop="name">
                     <el-col :span="20">
                         <el-input v-model.trim="ruleForm.name" size="mini"></el-input>
                     </el-col>
