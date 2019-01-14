@@ -34,7 +34,7 @@
         <board-toast :config="config" @save="submitUpload" @cancel="config.dialogVisible=false"  @handleClose="config.dialogVisible=false">
              <el-form :model="form" ref="ruleForm" :rules="rules" label-width="100px" class="demo-ruleForm">
                 <el-form-item label="模板名称" prop="alias">
-                    <el-input v-model="form.alias" placeholder=""></el-input>
+                    <el-input v-model="form.alias" placeholder="" style="width:220px"></el-input>
                 </el-form-item>
                 <el-form-item label="模板文件" prop="templatePath">
                     <el-upload
@@ -72,8 +72,7 @@ export default {
             },
             rules:{
                 alias:[
-                    { required: true, message: '请输入模板名称', trigger: 'blur' },
-                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                    { required: true, message: '请输入模板名称', trigger: 'blur' }
                 ]
             },
             form:{
@@ -96,7 +95,6 @@ export default {
                 Vue: this
             }).then(res => {
                 if (res.result) {
-                    console.log(res.model )
                     this.list=res.model.items
                 }
             });
