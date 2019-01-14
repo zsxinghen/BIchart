@@ -1,0 +1,17 @@
+{
+  "errorCode": 0,
+  "message": "查询成功",
+  "model": {
+    "alias": "111222",
+    "companyId": 232601,
+    "config": "{\"line\": 1, \"layout\": [{\"h\": 1, \"i\": \"_1546664629272_\", \"w\": 25, \"x\": 75, \"y\": 0, \"flag\": true, \"moved\": false, \"boolen\": false}, {\"h\": 1, \"i\": \"_1546668826747_\", \"w\": 25, \"x\": 0, \"y\": 0, \"flag\": true, \"moved\": false, \"boolen\": false}, {\"h\": 1, \"i\": \"_1546668826748_\", \"w\": 25, \"x\": 25, \"y\": 0, \"flag\": true, \"moved\": false, \"boolen\": false}, {\"h\": 1, \"i\": \"_1546668903226_\", \"w\": 25, \"x\": 50, \"y\": 0, \"flag\": true, \"moved\": false}]}",
+    "createBy": "运营管理员",
+    "createTime": "2019-01-05 13:02:13",
+    "deleted": "F",
+    "folderId": 21,
+    "id": 31,
+    "modifyBy": "运营管理员",
+    "modifyTime": "2019-01-05 14:14:53"
+  },
+  "result": true
+}

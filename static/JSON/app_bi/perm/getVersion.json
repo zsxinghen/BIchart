@@ -1,1 +1,9 @@
-{"errorCode":0,"message":"查询成功","model":[{"versionNo":1,"id":170}],"result":true}
+{
+  "errorCode": 0,
+  "message": "查询成功",
+  "model": [{
+    "versionNo": 1,
+    "id": 170
+  }],
+  "result": true
+}

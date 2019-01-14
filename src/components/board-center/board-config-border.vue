@@ -67,7 +67,7 @@ export default {
           opacticy: this.bgconfig.opacticy,
           type: this.bgconfig.type,
           borderColor: this.bgconfig.borderColor,
-          borderType:this.bgconfig.borderType,
+          borderType: this.bgconfig.borderType
         };
       } else if (this.bgconfig.type == "bgColor") {
         params.config.bgConfig = {
@@ -75,7 +75,7 @@ export default {
           type: this.bgconfig.type,
           color: this.bgconfig.color,
           borderColor: this.bgconfig.borderColor,
-          borderType:this.bgconfig.borderType,
+          borderType: this.bgconfig.borderType
         };
       } else {
         params.config.bgConfig = {
@@ -83,7 +83,7 @@ export default {
           type: this.bgconfig.type,
           imageUrl: this.bgconfig.imageUrl,
           borderColor: this.bgconfig.borderColor,
-          borderType:this.bgconfig.borderType,
+          borderType: this.bgconfig.borderType
         };
       }
       params.config = JSON.stringify(params.config);

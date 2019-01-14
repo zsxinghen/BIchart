@@ -1,0 +1,46 @@
+{
+  "errorCode": 0,
+  "message": "查询成功",
+  "model": [{
+    "alias": "文件夹1",
+    "deleted": "F",
+    "id": 7,
+    "reports": [{
+      "alias": "1-1",
+      "createUserId": 232526,
+      "deleted": "F",
+      "desisn": true,
+      "folderId": 7,
+      "giveDes": true,
+      "id": 64,
+      "isDesisn": 1,
+      "reportType": "自定义"
+    }]
+  }, {
+    "alias": "文件夹2",
+    "deleted": "F",
+    "id": 13,
+    "reports": []
+  }, {
+    "alias": "10月销售增长",
+    "deleted": "F",
+    "id": 15,
+    "reports": [{
+      "alias": "10月销售情况",
+      "createUserId": 232526,
+      "deleted": "F",
+      "desisn": true,
+      "folderId": 15,
+      "giveDes": true,
+      "id": 69,
+      "isDesisn": 1,
+      "reportType": "自定义"
+    }]
+  }, {
+    "alias": "设备添加",
+    "deleted": "F",
+    "id": 16,
+    "reports": []
+  }],
+  "result": true
+}
