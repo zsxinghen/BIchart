@@ -159,14 +159,15 @@ export default {
           chart: "table",
           type: "table",
           title: {},
-          remark: ""
+          remark: "",
+          backgroundColor: null
         },
         dataConfig: {
           /* 弹窗数据部分 */
           sourceType: "local",
           tableName: "",
           domain: null,
-          findCondJson:[],
+          findCondJson: [],
           /* 左边列表部分
           name--显示名称 ，porp字段名
           */
@@ -210,7 +211,12 @@ export default {
     updateSetting
   },
   computed: {
-    ...mapGetters(["getCurrConfigs", "getCurrNode", "getCurrchartId"])
+    ...mapGetters([
+      "getCurrConfigs",
+      "getCurrNode",
+      "getCurrchartId",
+      "getCurrentBackground"
+    ])
   },
   created() {
     if (this.getCurrConfigs.config) {
@@ -220,6 +226,16 @@ export default {
       // debugger;
     } else {
       //未配置则初始化
+      //根据看板背景设置图表背景
+      if (this.getCurrentBackground) {
+        this.config.settings.backgroundColor = this.getCurrentBackground;
+      } else {
+        this.config.settings.backgroundColor = "#ffffff";
+      }
+      console.log(
+        this.getCurrentBackground,
+        this.config.settings.backgroundColor
+      );
     }
   },
   mounted() {},

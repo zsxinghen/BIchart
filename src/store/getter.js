@@ -22,5 +22,8 @@ export default {
   },
   getBoardId: (state) => { //获取当前图表的配置信息
     return state.boardId
+  },
+  getCurrentBackground:(state,data)=>{//设置当前看板背景颜色
+    return state.boardBackground
   }
 }

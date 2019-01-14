@@ -39,6 +39,7 @@ export default {
     this.getData();
   },
   mounted() {
+
   },
   methods: {
     getData(boolen) {

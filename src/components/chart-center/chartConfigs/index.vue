@@ -91,6 +91,7 @@ import PluginConfig from "./configs/PluginConfig.vue";
 import { default as defaultConfig } from "../../../packages/indexConfig.js";
 import { default as data } from "../../../packages/indexData.js";
 import { types } from "../../../../static/chartType.js";
+import { mapGetters } from "vuex";
 export default {
   name: "configCommon",
   data() {
@@ -114,6 +115,12 @@ export default {
       }
     }
   },
+  computed: {
+    ...mapGetters(["getCurrentBackground"])
+  },
+  created() {
+    this.imgType = types;
+  },
   beforeMount() {
     if (!this.config.dataConfig.list.length) {
       //当未配置时，初始化报表配置信息
@@ -122,11 +129,18 @@ export default {
         "settings",
         Object.assign({}, defaultConfig[`config_${this.config.chart}`])
       );
+     if (this.getCurrentBackground) {
+        this.$set(
+          this.config.settings,
+          "backgroundColor",
+          this.getCurrentBackground
+        );
+      } else {
+        this.$set(this.config.settings, "backgroundColor", "#ffffff");
+      }
     }
   },
-  created() {
-    this.imgType = types;
-  },
+
   mounted() {
     this.setCollapseHeight();
     window.onresize = () => {
@@ -154,6 +168,20 @@ export default {
         "settings",
         Object.assign({}, defaultConfig[`config_${this.config.chart}`])
       );
+      this.$set(
+        this.config,
+        "settings",
+        Object.assign({}, defaultConfig[`config_${this.config.chart}`])
+      );
+      if (this.getCurrentBackground) {
+        this.$set(
+          this.config.settings,
+          "backgroundColor",
+          this.getCurrentBackground
+        );
+      } else {
+        this.$set(this.config.settings, "backgroundColor", "#ffffff");
+      }
       this.setData();
       // this.$set(
       //   this.config,

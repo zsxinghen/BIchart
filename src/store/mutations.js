@@ -23,5 +23,8 @@ export default {
   setBoardId:(state,data)=>{//设置当前图表的配置信息
     state.boardId = data;
   },
+  setCurrentBackground:(state,data)=>{//设置当前看板背景颜色
+    state.boardBackground = data;
+  }
 }
 

@@ -11,6 +11,7 @@
       <grid-item class="effect" 
         :class="['effect'+item.i]" 
         :id="['effect'+item.i]" 
+        :style="setBorderColor()"
         v-for="(item,index) in config.layout" 
         :x="item.x" 
         :y="item.y" 
@@ -59,7 +60,15 @@ export default {
     },
     tool: {
       default() {
-        return ["111", "edit", "refresh", "details", "zoom", "liandong", "more"];
+        return [
+          "111",
+          "edit",
+          "refresh",
+          "details",
+          "zoom",
+          "liandong",
+          "more"
+        ];
       }
     }
   },
@@ -71,14 +80,38 @@ export default {
   mounted() {},
   methods: {
     setBackground(item) {
-      if (
-        item.config &&
-        item.config.settings &&
-        item.config.settings.backgroundColor
-      ) {
-        return item.config.settings.backgroundColor;
+      // 判断是否设置背景颜色
+      if (this.config.bgConfig && this.config.bgConfig.type == "bgColor") {
+        if (
+          item.config &&
+          item.config.settings &&
+          item.config.settings.backgroundColor
+        ) {
+          return item.config.settings.backgroundColor;
+        } else {
+          return this.config.bgConfig.color;
+        }
+      } else {
+        if (
+          item.config &&
+          item.config.settings &&
+          item.config.settings.backgroundColor
+        ) {
+          return item.config.settings.backgroundColor;
+        } else {
+          return "#ffffff";
+        }
       }
-      return "#ffffff";
+    },
+    // 图表边框色
+    setBorderColor() {
+      if (this.config.bgConfig&&this.config.bgConfig.borderColor) {
+        return `box-shadow: 0px 1px 4px ${
+          this.config.bgConfig.borderColor
+        }, 0 0 40px rgba(0, 0, 0, 0.1) inset`;
+      } else {
+        return `box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset`;
+      }
     },
     setDraggable(flag) {
       if (this.config.isDraggable) this.isDraggable = flag;
@@ -197,7 +230,6 @@ export default {
 //   box-sizing: border-box;
 // }
 .effect {
-  box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   padding-top: 25px;
   box-sizing: border-box;
   background-color: white;

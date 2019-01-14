@@ -21,6 +21,7 @@
                 <el-dropdown-item command="标题设置">标题设置</el-dropdown-item>
                 <el-dropdown-item command="布局设置">布局设置</el-dropdown-item>
                 <el-dropdown-item command="背景设置">背景设置</el-dropdown-item>
+                <el-dropdown-item command="边框设置">边框设置</el-dropdown-item>
                 <el-dropdown-item v-show="isAdmin" command="看板授权">看板授权</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -31,7 +32,7 @@
             <super-layout :config="configData" ref="superLayout" :isToolbar="isToolbar" @handleedit="handleEdit"
               @handlerefresh="handleRefresh" @handlezoom="handleZoom" @handledetails="handleDetails" @handleliandong="handleLiandong">
               <template slot-scope="{data}">
-                <charts-view :id="data.i" :linkages="linkages" :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
+                <charts-view :id="data.i" :linkages="linkages"  :config="data.config" v-if="data.config" :ref="'myChart'+data.i"></charts-view>
               </template>
             </super-layout>
           </div>
@@ -43,6 +44,8 @@
     </div>
     <!-- 背景设置 -->
     <board-config-background ref="bgSet" :currentFile="currentFile" :bgconfig="bgconfig" @saveSuccess="saveSuccess"></board-config-background>
+    <board-config-border ref="borderSet" :currentFile="currentFile" :bgconfig="bgconfig" @saveSuccess="saveSuccess"></board-config-border>
+    
     <!-- 标题设置 -->
     <board-config-title ref="titleSet" :titleConfig="titleConfig" :currentFile="currentFile" @titleSuccess="titleSuccess"></board-config-title>
     <!-- 图表联动 -->
@@ -60,6 +63,7 @@ import siderBar from "../../common/sider-bar";
 import superLayout from "../../common/superLayout";
 import boardConfigTitle from "../../components/board-center/board-config-title";
 import boardConfigBackground from "../../components/board-center/board-config-background";
+import boardConfigBorder from "../../components/board-center/board-config-border";
 import boardConfigLayout from "../../components/board-center/board-config-layout";
 import boardConfigParam from "../../components/board-center/board-config-param";
 import chartsView from "../../components/chart-center/charts/index.vue";
@@ -89,7 +93,8 @@ export default {
         bgConfig: {
           type: "null",
           imageUrl: "",
-          opacticy: 1
+          opacticy: 1,
+          borderType:'default'
         },
         titleConfig: {
           title: {},
@@ -131,7 +136,12 @@ export default {
     // }
   },
   methods: {
-    ...mapMutations(["setCurrConfigs", "setCurrNode", "setCurrchartId"]),
+    ...mapMutations([
+      "setCurrConfigs",
+      "setCurrNode",
+      "setCurrchartId",
+      "setCurrentBackground"
+    ]),
     // 重新获取当前看板信息
     reGetBoard(data, id) {
       this.$refs.sidebar.getDesign({ ...data, reportType: "自定义" }, id);
@@ -203,6 +213,10 @@ export default {
           this.bgconfig = { ...this.configData.bgConfig };
           this.$refs.bgSet.show();
           break;
+        case "边框设置":
+          this.bgconfig = { ...this.configData.bgConfig };
+          this.$refs.borderSet.show();
+          break;
         case "布局设置":
           this.$apis
             .fetchPost(layoutUrls.sideBar.search, {
@@ -250,6 +264,17 @@ export default {
     handleEdit(data, index) {
       // data.boolen = false;
       this.setCurrConfigs(data);
+      // 存储当前看板背景
+      if (this.configData.bgConfig.type == "bgColor") {
+        if (this.configData.bgConfig.color) {
+          this.setCurrentBackground(this.configData.bgConfig.color);
+        } else {
+          this.setCurrentBackground(null);
+        }
+      } else {
+        this.setCurrentBackground(null);
+      }
+
       this.setCurrNode(JSON.parse(JSON.stringify(this.currentNode)));
       this.setCurrchartId(data.i);
       this.$router.push("/chartCenter");
@@ -342,7 +367,6 @@ export default {
       } else {
         this.isToolbar = true;
       }
-      console.log("isToolbar", this.isToolbar);
       if (res.model.giveDes) {
         this.isAdmin = true;
       } else {
@@ -476,6 +500,7 @@ export default {
     superLayout,
     boardConfigTitle,
     boardConfigBackground,
+    boardConfigBorder,
     boardConfigLayout,
     boardConfigParam,
     chartsView,

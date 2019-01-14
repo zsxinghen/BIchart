@@ -73,13 +73,14 @@ export default {
   data() {
     return {
       value: "",
-      findCondJson:[],
+      findCondJson: [],
       options: {
         warehouse: [],
         model: [],
         version: [],
         list: [] //数据列
-      }
+      },
+      isTableNull: false
     };
   },
   props: {
@@ -269,17 +270,28 @@ export default {
         })
         .then(res => {
           if (res.result) {
-            // console.log(this.options.list);
-            let list = this.options.list
-              .filter(v => v.isCheck == true)
-              .map(v => {
-                return {
-                  prop: v.alias,
-                  label: v.remark
-                };
+            if (!res.model[0]) {
+              //返回[null]情况
+              this.isTableNull = true;
+              this.$message({
+                type: "warning",
+                message: '您选择的数据列暂无数据，请重新选择'
               });
-            this.$refs.dataPreview.show(list, [...res.model]);
+            } else {
+              this.isTableNull = false;
+              // console.log(this.options.list);
+              let list = this.options.list
+                .filter(v => v.isCheck == true)
+                .map(v => {
+                  return {
+                    prop: v.alias,
+                    label: v.remark
+                  };
+                });
+              this.$refs.dataPreview.show(list, [...res.model]);
+            }
           } else {
+            this.isTableNull = true;
             this.$message({
               type: "warning",
               message: res.message

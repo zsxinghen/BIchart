@@ -9,7 +9,7 @@
             </div>
             <super-layout :config="configData" ref="superLayout" :isToolbar="true">
               <template slot-scope="{data}">
-                <charts-view :id="data.i" :config="data.config" v-if="data.config"></charts-view>
+                <charts-view :id="data.i" :linkages="linkages"  :config="data.config" :configData="configData" v-if="data.config"></charts-view>
               </template>
             </super-layout>
           </div>
@@ -60,7 +60,8 @@ export default {
         id: undefined,
         folderId: undefined,
         alias: undefined
-      }
+      },
+       linkages: null
     };
   },
   components: {
@@ -98,6 +99,7 @@ export default {
     // 设置自定义看板数据
     boardHandler(res, data) {
       this.configData.layout = JSON.parse(res.model.layoutConfig).layout;
+       this.linkages = res.model.linkages;
       res.model.datasourceLocationValueDtos.forEach(v => {
         let flag = this.configData.layout.findIndex(k => k.i === v.reportId);
         if (flag != -1) {

@@ -30,7 +30,7 @@
         <keep-alive>
           <!-- 远程数据源 -->
           <div v-if="ruleForm.sourceType=='remote'">
-            <remote-data :dataConfig="config.dataConfig" ref="remoteData" :ruleForm="ruleForm" :config="config"></remote-data>
+            <remote-data :dataConfig="config.dataConfig"  ref="remoteData" :ruleForm="ruleForm" :config="config"></remote-data>
           </div>
         </keep-alive>
       </el-row>
@@ -208,6 +208,12 @@ export default {
           }
         });
       } else {
+        if (this.$refs.remoteData.isTableNull) {
+          return this.$message({
+            type: "warning",
+            message: "您选择的数据列暂无数据，请重新选择"
+          });
+        }
         this.$refs["ruleForm"].validate(valid => {
           if (valid) {
             if (this.ruleForm.id || this.ruleForm.id === 0) {
