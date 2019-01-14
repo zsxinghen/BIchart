@@ -57,6 +57,7 @@ export default {
     }
   },
   mounted() {},
+  
   methods: {
     show() {
       this.dialogConfig.dialogVisible = true;
