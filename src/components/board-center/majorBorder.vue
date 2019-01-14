@@ -40,10 +40,10 @@ export default {
             },
             rules:{
                 name:[{ required: true, message: '请选输入看板名称', trigger: 'blur' }],
-                value:[{ required: true, message: '请选择布局方案', trigger: 'change' }]
+                value:[{ required: true, message: '请选择模板方案', trigger: 'change' }]
             },
             customConfig:{
-                title: "布局设置", 
+                title: "看板设置", 
                 dialogVisible: false, 
                 width: "400px", 
                 btnData: ["cancel", "save"],
